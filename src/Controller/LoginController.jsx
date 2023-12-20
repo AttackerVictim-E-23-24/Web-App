@@ -7,7 +7,6 @@ import { BaseURL } from './BaseURL'; // Asegúrate de que la ruta sea correcta
 
 const LoginController = () => {
   const { loginData, setLoginData } = useLoginModel();
-  const history = useHistory(); // Añade useHistory
 
   const handleInputChange = (field, value) => {
     setLoginData((prevData) => ({ ...prevData, [field]: value }));
