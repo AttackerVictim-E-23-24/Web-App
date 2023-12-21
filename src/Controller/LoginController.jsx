@@ -27,7 +27,7 @@ const LoginController = () => {
 
       // Si el estado es OK, redirige a la página de inicio
       if (response.status === 200) {
-        history.push('/home');
+        history.push('/admin');
       }
     } catch (error) {
       console.error(error);
