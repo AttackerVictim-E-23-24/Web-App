@@ -1,6 +1,7 @@
 // LoginForm.js
 import React from 'react';
 import '../Pages/css/styles.css'
+import { Link } from 'react-router-dom';
 
 const LoginView = ({ formData, onInputChange, onSubmit }) => {
   const { username, password } = formData;
@@ -20,7 +21,10 @@ const LoginView = ({ formData, onInputChange, onSubmit }) => {
         <div className="submit-button">
           <input type="submit" value="Iniciar sesión" />
         </div>
+        
       </form>
+      
+      <Link to="/recover-password">¿Olvidaste tu contraseña?</Link>
     </div>
   );
 };

@@ -1,12 +1,13 @@
 import React from 'react';
 import axios from 'axios';
-import { useHistory } from 'react-router-dom'; // Importa useHistory
+import { useNavigate } from 'react-router-dom';
 import useLoginModel from '../Model/LoginModel';
 import LoginView from '../View/LoginView';
 import { BaseURL } from './BaseURL'; // Asegúrate de que la ruta sea correcta
 
 const LoginController = () => {
   const { loginData, setLoginData } = useLoginModel();
+  const navigate = useNavigate();
 
   const handleInputChange = (field, value) => {
     setLoginData((prevData) => ({ ...prevData, [field]: value }));
@@ -27,7 +28,7 @@ const LoginController = () => {
 
       // Si el estado es OK, redirige a la página de inicio
       if (response.status === 200) {
-        history.push('/admin');
+        navigate('/admin');
       }
     } catch (error) {
       console.error(error);
