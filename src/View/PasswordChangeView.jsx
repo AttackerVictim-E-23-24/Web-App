@@ -8,11 +8,11 @@ function PasswordChangeView({ recoveryKey, newPass, handleInputChange, handleSub
       <form onSubmit={handleSubmit}>
         <label>
           Clave de recuperación:
-          <input className='field' type="text" name="recoveryKey" value={recoveryKey} onChange={handleInputChange} required />
+          <input className='field codigo' type="text" name="recoveryKey" value={recoveryKey} onChange={handleInputChange} required autocomplete="aaa" />
         </label>
         <label>
           Nueva contraseña:
-          <input className='field' type="password" name="newPass" value={newPass} onChange={handleInputChange} required />
+          <input className='field' type="password" name="newPass" value={newPass} onChange={handleInputChange} required autocomplete="new-password"  />
         </label>
         <button type="submit">Cambiar contraseña</button>
       </form>

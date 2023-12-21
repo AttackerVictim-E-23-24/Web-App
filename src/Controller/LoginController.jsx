@@ -1,5 +1,4 @@
 import React from 'react';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import useLoginModel from '../Model/LoginModel';
 import LoginView from '../View/LoginView';
@@ -18,18 +17,20 @@ const LoginController = () => {
     // Lógica de inicio de sesión, por ejemplo, enviar datos al servidor
     console.log('Datos de inicio de sesión:', loginData);
 
-    // Hacer una petición GET con axios
+    // Hacer una petición GET con fetch
     try {
-      const response = await axios.get(BaseURL.apiUrl, {
-        params: loginData,
-        mode: 'cors'
+      const response = await fetch(`${BaseURL.apiUrl}/users/authUser/${loginData.username}/${loginData.password}`, {
+        method: 'GET',
       });
-      console.log(response.data);
 
-      // Si el estado es OK, redirige a la página de inicio
-      if (response.status === 200) {
-        navigate('/admin');
-      }
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      } else 
+        navigate('/home');
+
+      const data = await response.json();
+      console.log(data);
+
     } catch (error) {
       console.error(error);
     }

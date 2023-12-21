@@ -21,23 +21,19 @@ function PasswordRecoveryController() {
     try {
         const emailWithoutAt = passwordRecovery.email.replace("@gmail.com", "");
         const response = await fetch(
-          `${BaseURL.apiUrl}/recPassword/${emailWithoutAt}`,
+          `${BaseURL.apiUrl}/users/recPassword/${emailWithoutAt}`,
           {
-            headers: {
-              "Content-Type": "application/json",
-              "ngrok-skip-browser-warning": "69420",
-            },
-            mode: "no-cors",
+            method: "GET",
           }
         );
       
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
-        }
+        }else 
+        navigate("/change-password");
       
         const data = await response.json();
         console.log("Datos recibidos:", data);
-        navigate("/change-password");
     } catch (error) {
       // Manejar error
       console.error("Error en la petición:", error);
