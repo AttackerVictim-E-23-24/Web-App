@@ -22,30 +22,24 @@ function PasswordChangeController() {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    const response = await fetch(`${BaseURL.apiUrl}/recovery/changePassword`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        recoveryKey,
-        newPass,
-      }),
-    });
+    try {
+      const response = await fetch(`${BaseURL.apiUrl}/users/newPassword/${recoveryKey}/${newPass}`, {
+        method: "GET",
+      });
 
-    if (!response.ok) {
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }else 
+        navigate('/login');
+
+
+      const data = await response.json();
+      console.log("Datos recibidos:", data);
+
+    } catch (error) {
       // Manejar error
-      console.error(
-        "Error en la petición:",
-        response.status,
-        response.statusText
-      );
-      return;
+      console.error("Error en la petición:", error);
     }
-
-    const data = await response.json();
-    console.log("Datos recibidos:", data);
-    navigate('/login');
   };
 
   return (
