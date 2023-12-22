@@ -1,0 +1,43 @@
+/* styles.css */
+.card {
+    width: 350px;
+    padding: 20px;
+    margin: 0 auto;
+    margin-top: 100px;
+    border-radius: 15px;
+    box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.19), 0px 6px 6px rgba(0, 0, 0, 0.23);
+    animation: slide-up 0.5s ease;
+  }
+  
+  @keyframes slide-up {
+    0% {
+      transform: translateY(100px);
+      opacity: 0;
+    }
+    100% {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+  
+.input-group {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.input-group label {
+  margin-right: 10px;
+}
+
+.submit-button {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.submit-button input {
+  background-color: #1e90ff;
+  color: white;
+  border-radius: 5px;
+  padding: 5px 10px;
+}
