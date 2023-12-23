@@ -14,7 +14,7 @@ function ExistingUserPage() {
     <div className="main-container">
       <div className="content">
         <div className="user-view-container">
-          <h2>Datos de usuario</h2>
+          <h2>Consulta de usuario</h2>
           <div className="role-selection">
             <select value={role} onChange={handleRoleChange}>
               <option value="victima">Victima</option>
