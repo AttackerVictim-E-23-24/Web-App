@@ -9,7 +9,7 @@
 }
 
 .user-view-container {
-  margin-left: 300px; /* Añade margen alrededor del contenedor */
+  margin-left: 20px; /* Añade margen alrededor del contenedor */
   margin-right: 30px;
   border-radius: 20px; /* Añade bordes redondeados */
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2); /* Añade sombra */

@@ -1,0 +1,95 @@
+/* UserView.css */
+.container {
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: 30px;
+    justify-content: space-between;
+    padding: 30px; /* Agrega padding al contenedor */
+    max-width: 80%; /* Establece un ancho máximo para el contenedor */
+  }
+  
+  .user-view-container {
+    margin-left: 20px; /* Añade margen alrededor del contenedor */
+    margin-right: 30px;
+    border-radius: 20px; /* Añade bordes redondeados */
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2); /* Añade sombra */
+    padding: 20px; /* Añade padding alrededor del contenido */
+    background-color: #ffffff; /* Añade un color de fondo */
+  }
+  
+  .row {
+    display: flex;
+    justify-content: space-between;
+    width: 96%; /* Asegura que la fila ocupe todo el ancho del contenedor */
+    margin-bottom: 20px; /* Añade margen en la parte inferior de cada fila */
+  }
+  
+  .field {
+    flex: 1;
+    margin: 10px; /* Añade margen alrededor de cada campo */
+    padding: 10px; /* Agrega padding a los campos */
+  }
+  
+  .field input:focus {
+    outline: none;
+    border-color: blue; /* Reemplaza #your-color con el color que quieras */
+  }
+  
+  .field input:not(:placeholder-shown) + .input-label {
+    display: block;
+  }
+  
+  .user-type button {
+    border: none;
+    background: none;
+    padding: 10px;
+    cursor: pointer;
+  }
+  
+  .user-type .active {
+    color: #007BFF; /* Cambia esto al color que quieras */
+    border-bottom: 2px solid #007BFF; /* Cambia esto al color que quieras */
+  }
+  
+  .input-label {
+    display: none;
+    font-size: 0.8em;
+    color: lightgray;
+  }
+  
+  .field.field-admin input:focus {
+    border-color: blue; /* Reemplaza #admin-color con el color que quieras para el rol de admin */
+  }
+  
+  .field.field-aggressor input:focus {
+    border-color: black; /* Reemplaza #admin-color con el color que quieras para el rol de admin */
+  }
+  
+  .field.field-user input:focus {
+    border-color: green; /* Reemplaza #user-color con el color que quieras para el rol de user */
+  }
+  
+  .field:last-child {
+    margin-right: 0;
+  }
+  
+  .field {
+    flex: 0 0 45%;
+    margin-bottom: 20px;
+    position: relative;
+  }
+  
+  .field input {
+    width: 100%;
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.1);
+  }
+  
+  .field label {
+    position: absolute;
+    top: -20px;
+    left: 10px;
+    background: white;
+    padding: 0 5px;
+  }

@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import NewUserController from "../Controller/NewUserController";
+import OldUserController from "../Controller/OldUserController";
 import "../Pages/css/home.css";
 
-function HomePage() {
+function ExistingUserPage() {
   const [role, setRole] = useState('agresor');
 
 
@@ -25,7 +25,7 @@ function HomePage() {
           <br />
           <br />
           <hr />
-          <NewUserController role={role} />
+          <OldUserController role={role} />
         </div>
         <br />
         <br />
@@ -36,4 +36,4 @@ function HomePage() {
   );
 }
 
-export default HomePage;
+export default ExistingUserPage;

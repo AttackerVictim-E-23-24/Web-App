@@ -11,6 +11,7 @@ import MonitoringPage from "./Pages/MonitoringPage";
 import Sidebar from "./Pages/sidebar";
 import PasswordRecovery from './Pages/PasswordRecovery';
 import PasswordChange from './Pages/PasswordChange';
+import ExistingUserPage from './Pages/ExistingUserPage';
 
 const App = () => {
   return (
@@ -24,6 +25,15 @@ const App = () => {
               <div>
                 <Sidebar />
                 <HomePage />
+              </div>
+            }
+          />
+          <Route
+            path="/existingUser"
+            element={
+              <div>
+                <Sidebar />
+                <ExistingUserPage />
               </div>
             }
           />
