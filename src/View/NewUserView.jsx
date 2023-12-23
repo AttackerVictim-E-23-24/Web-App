@@ -1,8 +1,8 @@
 // UserView.jsx
 import React from "react";
-import "../Pages/css/userView.css";
+import "../Pages/css/NewUserView.css";
 
-function UserView({ user, handleInputChange, handleSubmit }) {
+function NewUserView({ user, handleInputChange, handleSubmit }) {
   return (
     <div>
       <form method="POST" onSubmit={(event) => handleSubmit(event)}>
@@ -80,14 +80,14 @@ function UserView({ user, handleInputChange, handleSubmit }) {
           </div>
           <div className="row">
             <div className={`field field-${user.role}`}>
-              <label htmlFor="username">
+              <label htmlFor="userName">
                 Nombre de usuario del {user.role}
               </label>
               <input
-                id="username"
-                name="username"
+                id="userName"
+                name="userName"
                 onChange={handleInputChange}
-                placeholder="juangomez"
+                placeholder="juangomezca"
                 required
               />
             </div>
@@ -115,6 +115,28 @@ function UserView({ user, handleInputChange, handleSubmit }) {
                 required
               />
             </div>
+            <div className={`field field-${user.role}`}>
+              <label htmlFor="imei">IMEI del {user.role}</label>
+              <input
+                id="imei"
+                name="imei"
+                onChange={handleInputChange}
+                placeholder="123456789012345"
+                required
+              />
+            </div>
+          </div>
+          <div className="">
+            <div className={`field field-${user.role}`}>
+              <label htmlFor="address">Direccion de domicilio del {user.role}</label>
+              <input
+                id="address"
+                name="address"
+                onChange={handleInputChange}
+                placeholder="Av/calle/casa abcd 1234"
+                required
+              />
+            </div>
           </div>
         </div>
 
@@ -124,4 +146,4 @@ function UserView({ user, handleInputChange, handleSubmit }) {
   );
 }
 
-export default UserView;
+export default NewUserView;

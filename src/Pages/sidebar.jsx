@@ -1,43 +1,45 @@
-import React, { useState } from 'react';
+// Sidebar.jsx
+import React, { useState, useEffect } from 'react';
 import '../Pages/css/sidebar.css';
-import { Link, useLocation  } from 'react-router-dom'; // Importa Link
+import { Link, useLocation  } from 'react-router-dom';
 
-const Sidebar = () => { // No necesitas onOptionChange si estás usando Link
-  const [isDropdownOpen, setDropdownOpen] = useState(false);
-  const location = useLocation(); // Obtiene la ubicación actual
+const Sidebar = () => {
+  const [isDropdownOpen, setDropdownOpen] = useState(JSON.parse(localStorage.getItem('dropdownOpen')) || false);
+  const location = useLocation();
 
-  let hoverColor;
-  if (location.pathname.includes('admin')) {
-    hoverColor = 'yellow';
-  } else if (location.pathname.includes('attacker')) {
-    hoverColor = 'red';
-  } else {
-    hoverColor = '#0074cc'; // Color por defecto
-  }
+  useEffect(() => {
+    localStorage.setItem('dropdownOpen', JSON.stringify(isDropdownOpen));
+  }, [isDropdownOpen]);
+
   const toggleDropdown = () => {
     setDropdownOpen(!isDropdownOpen);
   };
 
+  const isActive = (path) => {
+    return location.pathname.includes(path);
+  };
+
   return (
     <div className="sidebar">
-      <h2>AttackerVictim</h2>
-      <hr css-6vm7vh/>
+      <Link to="/home" style={{ textDecoration: 'none', color: 'inherit' }}>
+        <h2 className="title">AttackerVictim</h2>
+      </Link>
+      <hr className='css-6vm7vh'/>
 
       <ul>
         <div className='css-u2ablu ' >
         <li onClick={toggleDropdown}>
           <span>{isDropdownOpen ? '▲' : '▼'}</span>
-          <span>    Usuarios</span>
+          <span className="userCSS">Usuarios</span>
           {isDropdownOpen && (
             <ul className="dropdown">
-              <Link to="/admin" className="sidebar-link"><li style={{ '--hover-color': hoverColor }}>Administrador</li></Link> {/* Usa Link para navegar a /administrador */}
-              <Link to="/victim" className="sidebar-link"><li>Victima</li></Link> {/* Usa Link para navegar a /victima */}
-              <Link to="/attacker" className="sidebar-link"><li>Atacante</li></Link> {/* Usa Link para navegar a /atacante */}
+              <Link to="/home" className="sidebar-link"><li className={isActive('/home') ? 'active css-1x3v3vy' : ''}>Nuevo</li></Link>
+              <Link to="/existingUser" className="sidebar-link"><li className={isActive('/existingUser') ? 'active css-1x3v3vy' : ''}>Existente</li></Link> 
             </ul>
           )}
         </li></div>
-        <Link to="/monitoring" className="sidebar-link"><li style={{ '--hover-color': hoverColor }}>Monitoreo</li></Link> {/* Usa Link para navegar a /monitoreo */}
-        <Link to="/security-zone" className="sidebar-link"><li>Zonas de seguridad</li></Link> {/* Usa Link para navegar a /zonas */}
+        <Link to="/monitoring" className="sidebar-link"><li className={isActive('/monitoring') ? 'active css-1x3v3vy' : ''}>Monitoreo</li></Link>
+        <Link to="/security-zone" className="sidebar-link"><li className={isActive('/security-zone') ? 'active css-1x3v3vy' : ''}>Zonas de seguridad</li></Link>
       </ul>
     </div>
   );
