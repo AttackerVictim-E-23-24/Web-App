@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import PasswordChangeView from "../View/PasswordChangeView";
 import { BaseURL } from "./BaseURL";
 
-function PasswordChangeController() {
+function PasswordChangeController({email}) {
   const [recoveryKey, setRecoveryKey] = useState('');
   const [newPass, setNewPass] = useState('');
   const navigate = useNavigate();
@@ -23,7 +23,7 @@ function PasswordChangeController() {
     event.preventDefault();
 
     try {
-      const response = await fetch(`${BaseURL.apiUrl}/users/newPassword/${recoveryKey}/${newPass}`, {
+      const response = await fetch(`${BaseURL.apiUrl}/users/recPassword/${email}/${recoveryKey}/${newPass}`, {
         method: "GET",
       });
 
