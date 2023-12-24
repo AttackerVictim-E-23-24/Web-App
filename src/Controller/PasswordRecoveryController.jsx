@@ -19,7 +19,8 @@ function PasswordRecoveryController() {
     event.preventDefault();
 
     try {
-        const emailWithoutAt = passwordRecovery.email.replace("@gmail.com", "");
+        let emailWithoutAt = passwordRecovery.email;
+        emailWithoutAt= emailWithoutAt.replace("@gmail.com", "");
         const response = await fetch(
           `${BaseURL.apiUrl}/users/recPassword/${emailWithoutAt}`,
           {
@@ -30,7 +31,7 @@ function PasswordRecoveryController() {
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }else 
-        navigate("/change-password");
+        navigate("/change-password", { state: { email: passwordRecovery.email } });
       
         const data = await response.json();
         console.log("Datos recibidos:", data);
