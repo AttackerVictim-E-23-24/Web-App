@@ -1,4 +1,64 @@
 h1 {
-    text-align: center; /* Centra el texto horizontalmente */
-    margin: 0 auto; /* Centra el bloque verticalmente */
-  }
+  text-align: center; /* Centra el texto horizontalmente */
+  margin: 0 auto; /* Centra el bloque verticalmente */
+}
+/* monitoring.css */
+.card {
+  border-radius: 15px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  border-color: #007bff;
+}
+
+.page {
+  margin-top: 50px;
+  margin-left: 50px;
+  margin-right: 50px;
+  border-color: #007bff;
+}
+
+/* Añade un padding al contenido del acordeón */
+.main-container {
+  display: flex; /* Utiliza Flexbox para alinear los elementos horizontalmente */
+}
+.content {
+  flex-grow: 1; /* Permite que el contenido ocupe el espacio restante */
+  overflow: auto; /* Añade barras de desplazamiento si el contenido es demasiado grande */
+  margin-left: 250px; /* Debe ser igual al ancho de tu Sidebar */
+}
+.view-container {
+  margin-left: 20px; /* Añade margen alrededor del contenedor */
+  margin-right: 30px;
+  margin-top: 22px;
+  margin-bottom: 50px;
+  overflow: auto;
+  border-radius: 20px; /* Añade bordes redondeados */
+  box-shadow: 0 4px 8px 8px rgba(0, 0, 0, 0.2); /* Añade sombra */
+  padding: 10px; /* Añade padding alrededor del contenido */
+  background-color: #ffffff; /* Añade un color de fondo */
+}
+
+.sidebar {
+  width: 250px; /* Ajusta el ancho de la barra lateral según lo necesites */
+  /* Resto de estilos existentes */
+}
+
+.user-type button {
+  border: none;
+  background: none;
+  padding: 10px;
+  cursor: pointer;
+}
+
+.user-type .active {
+  color: #007bff; /* Cambia esto al color que quieras */
+  border-bottom: 2px solid #007bff; /* Cambia esto al color que quieras */
+}
+
+.role-selection select {
+  padding: 15px; /* Aumenta el padding para hacer el listbox más grande */
+  border: 1px solid #ccc;
+  border-radius: 10px; /* Aumenta el border-radius para bordes más redondeados */
+  width: 100%;
+  font-size: 18px; /* Aumenta el tamaño de la fuente para hacer el listbox más grande */
+  float: right;
+}

@@ -2,10 +2,10 @@
 import React from "react";
 import "../Pages/css/MonitoringView.css";
 
-function MonitoringView({ monitoring, handleInputChange, handleSubmit }) {
+function MonitoringView({ handleInputChange, handleSubmit }) {
   return (
     <div>
-      <form method="POST" onSubmit={(event) => handleSubmit(event)}>
+      <form id="formId" method="POST" onSubmit={(event) => handleSubmit(event)}>
         <br />
         <br />
 
@@ -56,7 +56,9 @@ function MonitoringView({ monitoring, handleInputChange, handleSubmit }) {
           </div>
           <div className="row">
             <div className="field">
-              <label htmlFor="minDistance">Distancia mínima de alejamiento</label>
+              <label htmlFor="minDistance">
+                Distancia mínima de alejamiento
+              </label>
               <input
                 id="minDistance"
                 name="minDistance"
@@ -87,8 +89,6 @@ function MonitoringView({ monitoring, handleInputChange, handleSubmit }) {
             </div>
           </div>
         </div>
-
-        <button type="submit">Registrar Monitoreo</button>
       </form>
     </div>
   );

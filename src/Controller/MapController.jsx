@@ -42,6 +42,7 @@ const MapController = ({ canDrawPolygons }) => {
 
   return (
     <MapView 
+    canDrawPolygons={canDrawPolygons}
       center={mapModel.getCenter()} 
       polygons={mapModel.getPolygons()} 
       onMapClick={handleMapClick} 

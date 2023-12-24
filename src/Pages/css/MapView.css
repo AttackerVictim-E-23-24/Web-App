@@ -6,6 +6,6 @@
 
 /* MapView.css */
 .map {
-  border-radius: 15px; /* Bordes redondeados */
+  border-radius: 30px; /* Bordes redondeados */
   box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2); /* Añade una sombra al div */
 }
