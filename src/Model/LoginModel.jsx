@@ -5,6 +5,7 @@ const useLoginModel = () => {
   const [loginData, setLoginData] = useState({
     username: '',
     password: '',
+    message: '',
   });
 
   return {
