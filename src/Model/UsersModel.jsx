@@ -1,4 +1,4 @@
-import User from "./NewUserModel.jsx";
+import UserModel from "./UserModel.jsx";
 
 class UsersModel {
   constructor() {
@@ -6,7 +6,7 @@ class UsersModel {
   }
 
   addUser(user) {
-    if (user instanceof User) {
+    if (user instanceof UserModel) {
       this.usersList.push(user);
     } else {
       throw new Error("The user must be an instance of User");

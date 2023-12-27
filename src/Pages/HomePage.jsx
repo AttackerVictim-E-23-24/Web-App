@@ -1,10 +1,10 @@
+// HomePage.jsx
 import React, { useState } from "react";
-import NewUserController from "../Controller/NewUserController";
+import UserController from "../Controller/UserController";
 import "../Pages/css/home.css";
 
 function HomePage() {
-  const [role, setRole] = useState('agresor');
-
+  const [role, setRole] = useState("agresor");
 
   const handleRoleChange = (event) => {
     setRole(event.target.value);
@@ -24,8 +24,9 @@ function HomePage() {
           <br />
           <br />
           <br />
+          <br />
           <hr />
-          <NewUserController role={role} />
+          <UserController role={role} />
         </div>
         <br />
         <br />

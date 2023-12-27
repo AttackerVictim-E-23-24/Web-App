@@ -2,10 +2,10 @@
 import React from "react";
 import "../Pages/css/MonitoringView.css";
 
-function MonitoringView({ handleInputChange, handleSubmit }) {
+function MonitoringView({ handleInputChange, handleSubmit, responseMessage, responseSuccess }) {
   return (
     <div>
-      <form id="formId" method="POST" onSubmit={(event) => handleSubmit(event)}>
+    <form id="formId" method="POST" onSubmit={handleSubmit}>
         <br />
         <br />
 
@@ -89,6 +89,10 @@ function MonitoringView({ handleInputChange, handleSubmit }) {
             </div>
           </div>
         </div>
+        <button type="submit">Enviar</button>
+        <div style={{ borderRadius: '10px', backgroundColor: responseSuccess ? '#6dd772' : '#ff5c4b' }}>
+        {responseMessage}
+      </div>
       </form>
     </div>
   );

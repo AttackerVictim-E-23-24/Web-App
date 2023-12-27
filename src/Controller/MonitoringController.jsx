@@ -1,12 +1,16 @@
 // MonitoringFormController.jsx
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import MonitoringModel from "../Model/MonitoringModel";
 import MonitoringView from "../View/MonitoringView";
 import { BaseURL } from "./BaseURL";
+import GeneralContext from '../GeneralContext';
 
-const MonitoringFormController = ({ handleSubmit }) => {
+const MonitoringFormController = () => {
   const [monitoring, setMonitoring] = useState(new MonitoringModel());
-
+  const { setMonitoringData } = useContext(GeneralContext);
+  const [responseMessage, setResponseMessage] = useState("");
+  const [responseSuccess, setResponseSuccess] = useState(false);
+  
   const handleInputChange = (event) => {
     const { name, value } = event.target;
     setMonitoring({ ...monitoring, [name]: value });
@@ -30,24 +34,34 @@ const MonitoringFormController = ({ handleSubmit }) => {
         endDate: monitoring.endDate,
       }),
     });
-
+    const data = await response.json();
     if (!response.ok) {
       console.error(
         "Error en la petición:",
         response.status,
         response.statusText
       );
+      setResponseMessage(data.mensaje);
+      setResponseSuccess(false);
       return;
     }
-
     console.log("La petición fue exitosa");
-    handleSubmit();
+    setResponseMessage(data.mensaje);
+    setResponseSuccess(data.respuesta);
+  
+    // Actualiza el estado monitoringData con los datos del monitoreo
+    setMonitoringData(monitoring);
+  
+    // Borra los inputs
+    setMonitoring(new MonitoringModel());
   };
 
   return (
     <MonitoringView
       handleInputChange={handleInputChange}
       handleSubmit={submitForm}
+      responseMessage={responseMessage}
+      responseSuccess={responseSuccess}
     />
   );
 };

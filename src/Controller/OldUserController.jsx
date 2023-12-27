@@ -2,7 +2,6 @@
 import React, { useState } from "react";
 import OldUserModel from "../Model/OldUserModel";
 import OldUserView from "../View/OldUserView";
-import UsersTableView from "../View/UsersTableView"; // Asegúrate de importar UsersTableView
 import { BaseURL } from "./BaseURL";
 import UsersModel from "../Model/UsersModel";
 
@@ -11,9 +10,8 @@ const UserTypeDto = {
   AGRESOR: { id: 3, name: "Agresor" },
 };
 
-function OldUserController({ role }) {
+function OldUserController({ role, handleSubmit }) {
   const [user, setUser] = useState(new OldUserModel());
-  const [showSearch, setShowSearch] = useState(true); // Nuevo estado para controlar la visualización del formulario de búsqueda
   const users = new UsersModel();
 
   const handleInputChange = (event) => {
@@ -21,37 +19,35 @@ function OldUserController({ role }) {
     setUser({ ...user, [name]: value });
   };
 
-  const handleSubmit = async (event) => {
+  const handleFormSubmit = async (event) => {
     event.preventDefault();
-
     const userTypeDto =
       role === "Victima" ? UserTypeDto.VICTIMA : UserTypeDto.AGRESOR;
 
     const datosPersona = {
-      nombre: user.firstName || '',
-      seg_nombre: user.secondName || '',
-      apellido: user.lastName || '',
-      seg_apellido: user.secondLastName || '',
-      cedula: user.cedula || '',
-      fch_nac: user.birthDate || '',
-      direccion: user.address || '',
+      nombre: user.firstName || "",
+      seg_nombre: user.secondName || "",
+      apellido: user.lastName || "",
+      seg_apellido: user.secondLastName || "",
+      cedula: user.cedula || "",
+      fch_nac: user.birthDate || "",
+      direccion: user.address || "",
     };
-    
+
     const response = await fetch(`${BaseURL.apiUrl}/users/setUser`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        userName: user.userName || '',
-        imei: user.imei || '',
-        password: user.password || '',
+        userName: user.userName || "",
+        imei: user.imei || "",
+        password: user.password || "",
         userTypeDto,
-        email: user.email || '',
+        email: user.email || "",
         datosPersona,
       }),
     });
-    
 
     if (!response.ok) {
       console.error(
@@ -63,19 +59,19 @@ function OldUserController({ role }) {
     }
 
     users.addUser(user);
-    setShowSearch(false); // Oculta el formulario de búsqueda después de agregar el usuario
 
     console.log("La petición fue exitosa");
+
+    // Llama a la función handleSubmit que se pasa como prop
+    handleSubmit(event);
   };
 
-  return showSearch ? (
+  return (
     <OldUserView
       user={{ role: role }}
       handleInputChange={handleInputChange}
-      handleSubmit={handleSubmit}
+      handleSubmit={handleFormSubmit}
     />
-  ) : (
-    <UsersTableView users={users.getUsers()} /> // Muestra la tabla de usuarios cuando showSearch es false
   );
 }
 

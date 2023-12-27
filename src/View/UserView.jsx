@@ -1,11 +1,17 @@
 // UserView.jsx
 import React from "react";
-import "../Pages/css/OldUserView.css";
+import "../Pages/css/UserView.css";
 
-function OldUserView({ user, handleInputChange, handleSubmit }) {
+function UserView({
+  user,
+  handleInputChange,
+  handleSubmit,
+  responseMessage,
+  responseSuccess,
+}) {
   return (
     <div>
-    <form id="form1" method="POST" onSubmit={(event) => handleSubmit(event)}>
+      <form id="userForm" method="POST" onSubmit={handleSubmit}>
         <br />
         <br />
 
@@ -66,6 +72,19 @@ function OldUserView({ user, handleInputChange, handleSubmit }) {
               />
             </div>
             <div className={`field field-${user.role}`}>
+              <label htmlFor="email">Correo electrónico del {user.role}</label>
+              <input
+                id="email"
+                name="email"
+                type="email"
+                onChange={handleInputChange}
+                placeholder="juangomez@example.com"
+                required
+              />
+            </div>
+          </div>
+          <div className="row">
+            <div className={`field field-${user.role}`}>
               <label htmlFor="userName">
                 Nombre de usuario del {user.role}
               </label>
@@ -77,19 +96,21 @@ function OldUserView({ user, handleInputChange, handleSubmit }) {
                 required
               />
             </div>
-          </div>
-          <div className="row">
             <div className={`field field-${user.role}`}>
-              <label htmlFor="email">Correo electrónico del {user.role}</label>
+              <label htmlFor="password">
+                Nombre de usuario del {user.role}
+              </label>
               <input
-                id="email"
-                name="email"
-                type="email"
+                id="password"
+                name="password"
+                type="password"
                 onChange={handleInputChange}
-                placeholder="juangomez@example.com"
+                placeholder="******"
                 required
               />
             </div>
+          </div>
+          <div className="row">
             <div className={`field field-${user.role}`}>
               <label htmlFor="imei">IMEI del {user.role}</label>
               <input
@@ -100,53 +121,13 @@ function OldUserView({ user, handleInputChange, handleSubmit }) {
                 required
               />
             </div>
-          </div>
-          <div className="row">
             <div className={`field field-${user.role}`}>
               <label htmlFor="startBirthDate">
-                Fecha de inicio de nacimiento del {user.role}
+                Fecha de nacimiento del {user.role}
               </label>
               <input
                 id="startBirthDate"
                 name="startBirthDate"
-                type="date"
-                onChange={handleInputChange}
-                required
-              />
-            </div>
-            <div className={`field field-${user.role}`}>
-              <label htmlFor="endBirthDate">
-                Fecha de fin de nacimiento del {user.role}
-              </label>
-              <input
-                id="endBirthDate"
-                name="endBirthDate"
-                type="date"
-                onChange={handleInputChange}
-                required
-              />
-            </div>
-          </div>
-          <div className="row">
-            <div className={`field field-${user.role}`}>
-              <label htmlFor="startRegistrationDate">
-                Fecha de inicio de registro del {user.role}
-              </label>
-              <input
-                id="startRegistrationDate"
-                name="startRegistrationDate"
-                type="date"
-                onChange={handleInputChange}
-                required
-              />
-            </div>
-            <div className={`field field-${user.role}`}>
-              <label htmlFor="endRegistrationDate">
-                Fecha de fin de registro del {user.role}
-              </label>
-              <input
-                id="endRegistrationDate"
-                name="endRegistrationDate"
                 type="date"
                 onChange={handleInputChange}
                 required
@@ -167,12 +148,19 @@ function OldUserView({ user, handleInputChange, handleSubmit }) {
               />
             </div>
           </div>
-
         </div>
-
+        <button type="submit">Enviar</button>
+        <div
+          style={{
+            borderRadius: "10px",
+            backgroundColor: responseSuccess ? "#6dd772" : "#ff5c4b",
+          }}
+        >
+          {responseMessage}{" "}
+        </div>
       </form>
     </div>
   );
 }
 
-export default OldUserView;
+export default UserView;

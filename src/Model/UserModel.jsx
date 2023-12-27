@@ -1,5 +1,5 @@
 // User.js
-class NewUserModel {
+class UserModel {
     constructor(firstName, secondName, lastName, secondLastName, birthDate, cedula, userName, password, email, role, imei,userTypeDto,direccion, registrationDate) {
       this.firstName = firstName;
       this.secondName = secondName;
@@ -42,4 +42,4 @@ class NewUserModel {
     }
 }
 
-export default NewUserModel;
+export default UserModel;

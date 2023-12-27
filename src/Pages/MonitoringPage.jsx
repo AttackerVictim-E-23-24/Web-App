@@ -1,32 +1,50 @@
 // MonitoringPage.jsx
-import React from "react";
-import "../Pages/css/monitoring.css";
-import MapController from "../Controller/MapController";
+import React, { useContext } from "react";
+import GeneralContext from "../GeneralContext";
+import NewUserController from "../Controller/UserController";
 import MonitoringController from "../Controller/MonitoringController";
+import "../Pages/css/monitoring.css";
 
 const MonitoringPage = () => {
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    // Aquí va la lógica para manejar el envío del formulario
-    console.log("Formulario enviado");
-  };
+  const { userVictim, userAttacker, monitoringData } =
+    useContext(GeneralContext);
+
+  let content;
+
+  if (!userVictim) {
+    content = (
+      <div>
+      <h2>Registrar Victima</h2>
+      <hr />
+        <NewUserController role="victima" />
+      </div>
+    );
+  } else if (!userAttacker) {
+    content = (
+      <div>
+      <h2>Registrar Agresor</h2>
+      <hr />
+        <NewUserController role="agresor" />
+      </div>
+    );
+  } else if (!monitoringData) {}
+  
+    content = (
+      <div>
+      <h2>Registrar Monitoreo</h2>
+      <hr />
+        <MonitoringController />
+      </div>
+    );
+
 
   return (
     <div className="main-container">
       <div className="content">
-        <div className="view-container">
-          <h1>Registrar Monitoreo</h1>
-          <hr />
-          <form onSubmit={handleSubmit}>
-            <MonitoringController handleSubmit={handleSubmit} />
-
-            <div className="page">
-              <MapController canDrawPolygons={false} />
-            </div>
-            <button type="submit" form="formId">
-              Registrar Monitoreo
-            </button>
-          </form>
+        <div className="controller-container">
+          <h1>Datos de Monitoreo</h1>
+          <br />
+          {content}
         </div>
       </div>
       <br />
