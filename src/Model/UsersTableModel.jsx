@@ -1,8 +1,9 @@
+// UsersTableModel.js
 import UserModel from "./UserModel.jsx";
 
-class UsersModel {
-  constructor() {
-    this.usersList = [];
+class UsersTableModel {
+  constructor(users = []) {
+    this.usersList = users;
   }
 
   addUser(user) {
@@ -18,4 +19,4 @@ class UsersModel {
   }
 }
 
-export default UsersModel;
+export default UsersTableModel;

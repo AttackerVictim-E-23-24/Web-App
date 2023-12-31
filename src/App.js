@@ -13,7 +13,6 @@ import MonitoringPage from "./Pages/MonitoringPage";
 import Sidebar from "./Pages/sidebar";
 import PasswordRecovery from './Pages/PasswordRecovery';
 import PasswordChange from './Pages/PasswordChange';
-import ExistingUserPage from './Pages/ExistingUserPage';
 import SecurityZonePage from './Pages/SecurityZonePage';
 import FollowUpPage from './Pages/FollowUpPage';
 import UserModel from './Model/UserModel';
@@ -36,15 +35,6 @@ const App = () => {
                 <div>
                   <Sidebar />
                   <HomePage />
-                </div>
-              }
-            />
-            <Route
-              path="/existingUser"
-              element={
-                <div>
-                  <Sidebar />
-                  <ExistingUserPage />
                 </div>
               }
             />

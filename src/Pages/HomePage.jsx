@@ -1,6 +1,6 @@
 // HomePage.jsx
 import React, { useState } from "react";
-import UserController from "../Controller/UserController";
+import UsersTableController from "../Controller/UsersTableController";
 import "../Pages/css/home.css";
 
 function HomePage() {
@@ -26,7 +26,7 @@ function HomePage() {
           <br />
           <br />
           <hr />
-          <UserController role={role} />
+          <UsersTableController />
         </div>
         <br />
         <br />

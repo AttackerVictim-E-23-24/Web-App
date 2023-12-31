@@ -40,6 +40,63 @@ class UserModel {
     changePassword(newPassword) {
       this.password = newPassword;
     }
+
+    getId() {
+      return this.id;
+    }
+
+    getUserName() {
+      return this.userName;
+    }
+
+    getImei() {
+      return this.imei;
+    }
+
+    getEmail() {
+      return this.email;
+    }
+
+    getRole() {
+      return this.role;
+    }
+
+    getDireccion() {
+      return this.direccion;
+    }
+
+    getRegistrationDate() {
+      return this.registrationDate;
+    }
+
+    getCedula() {
+      return this.cedula;
+    }
+
+    getBirthDate() {
+      return this.birthDate;
+    }
+
+    getFirstName() {
+      return this.firstName;
+    }
+
+    getSecondName() {
+      return this.secondName;
+    }
+
+    getLastName() {
+      return this.lastName;
+    }
+
+    getSecondLastName() {
+      return this.secondLastName;
+    }
+
+    getUserTypeDto() {
+      return this.userTypeDto;
+    }
+
 }
 
 export default UserModel;
