@@ -22,7 +22,7 @@ function MonitoringView({ handleInputChange, handleSubmit, responseMessage, resp
               />
             </div>
             <div className="field">
-              <label htmlFor="frequency">Frecuencia</label>
+              <label htmlFor="frequency">Frecuencia (segundos)</label>
               <input
                 id="frequency"
                 name="frequency"
@@ -34,7 +34,7 @@ function MonitoringView({ handleInputChange, handleSubmit, responseMessage, resp
           </div>
           <div className="row">
             <div className="field">
-              <label htmlFor="downtime">Tiempo de inactividad</label>
+              <label htmlFor="downtime">Tiempo de inactividad (segundos)</label>
               <input
                 id="downtime"
                 name="downtime"
@@ -44,7 +44,7 @@ function MonitoringView({ handleInputChange, handleSubmit, responseMessage, resp
               />
             </div>
             <div className="field">
-              <label htmlFor="offlineTime">Tiempo offline</label>
+              <label htmlFor="offlineTime">Tiempo offline (segundos)</label>
               <input
                 id="offlineTime"
                 name="offlineTime"
@@ -57,7 +57,7 @@ function MonitoringView({ handleInputChange, handleSubmit, responseMessage, resp
           <div className="row">
             <div className="field">
               <label htmlFor="minDistance">
-                Distancia mínima de alejamiento
+                Distancia mínima de alejamiento (Km)
               </label>
               <input
                 id="minDistance"
@@ -68,18 +68,7 @@ function MonitoringView({ handleInputChange, handleSubmit, responseMessage, resp
               />
             </div>
             <div className="field">
-              <label htmlFor="record">Expediente</label>
-              <input
-                id="record"
-                name="record"
-                type="text"
-                onChange={handleInputChange}
-              />
-            </div>
-          </div>
-          <div className="row">
-            <div className="field">
-              <label htmlFor="endDate">Fecha fin del monitoreo</label>
+              <label htmlFor="endDate">Fecha fin del monitoreo (opcional)</label>
               <input
                 id="endDate"
                 name="endDate"
@@ -87,6 +76,8 @@ function MonitoringView({ handleInputChange, handleSubmit, responseMessage, resp
                 onChange={handleInputChange}
               />
             </div>
+          </div>
+          <div className="row">
           </div>
         </div>
         <button type="submit">Enviar</button>

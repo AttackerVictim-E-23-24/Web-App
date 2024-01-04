@@ -51,8 +51,8 @@ const Sidebar = () => {
       </ul>
 
       <div className="user-info">
-        <p>Victima: {userVictim?.firstName}</p>
-        <p>Agresor: {userAttacker?.firstName}</p>
+        <p>Victima: {userVictim?.userName}</p>
+        <p>Agresor: {userAttacker?.userName}</p>
       </div>
     </div>
   );

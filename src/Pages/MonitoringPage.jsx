@@ -6,32 +6,55 @@ import "../Pages/css/monitoring.css";
 
 const MonitoringPage = () => {
   const [content, setContent] = useState(null);
-  const [victimPrintable, setVictimPrintable] = useState(true); // Nueva variable de estado
-  const [attackerPrintable, setAttackerPrintable] = useState(true); // Nueva variable de estado
+  const [victimPrintable, setVictimPrintable] = useState(localStorage.getItem('victimDataSent') !== 'true');
+  const [attackerPrintable, setAttackerPrintable] = useState(localStorage.getItem('attackerDataSent') !== 'true');
+  const [currentView, setCurrentView] = useState('victim');
+
+  const resetData = () => {
+    localStorage.removeItem('attackerDataSent');
+    localStorage.removeItem('victimDataSent');
+    setAttackerPrintable(true);
+    setVictimPrintable(true);
+    setCurrentView('victim');
+  };
 
   useEffect(() => {
     if (victimPrintable) {
+      setCurrentView('victim');
+    } else if (attackerPrintable) {
+      setCurrentView('attacker');
+    } else {
+      setCurrentView('monitoring');
+    }
+  }, [victimPrintable, attackerPrintable]);
+
+  useEffect(() => {
+    if (currentView === 'victim') {
       setContent(
         <div>
           <h2>Registrar Victima</h2>
           <hr />
           <UserController
             role="victima"
-            setVictimPrintable={setVictimPrintable}
-          />{" "}
-          {/* Pasar isSet y setIsSet */}
+            setVictimPrintable={(value) => {
+              setVictimPrintable(value);
+              localStorage.setItem('victimDataSent', !value);
+            }}
+          />
         </div>
       );
-    } else if (attackerPrintable) {
+    } else if (currentView === 'attacker') {
       setContent(
         <div>
           <h2>Registrar Agresor</h2>
           <hr />
           <UserController
             role="agresor"
-            setAttackerPrintable={setAttackerPrintable}
-          />{" "}
-          {/* Pasar isSet y setIsSet */}
+            setAttackerPrintable={(value) => {
+              setAttackerPrintable(value);
+              localStorage.setItem('attackerDataSent', !value);
+            }}
+          />
         </div>
       );
     } else {
@@ -39,11 +62,11 @@ const MonitoringPage = () => {
         <div>
           <h2>Registrar Monitoreo</h2>
           <hr />
-          <MonitoringController /> {/* Pasar isSet y setIsSet */}
+          <MonitoringController />
         </div>
       );
     }
-  }, [victimPrintable, attackerPrintable]); // Dependiendo de isSet
+  }, [currentView]);
 
   return (
     <div className="main-container">
@@ -53,6 +76,7 @@ const MonitoringPage = () => {
           <br />
           {content}
         </div>
+          <button style={{marginLeft:"20px",marginBlockEnd:'20px', width: '100px' }} onClick={resetData}>Nuevo</button>
       </div>
       <br />
     </div>
