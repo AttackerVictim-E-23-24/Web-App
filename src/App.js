@@ -1,6 +1,6 @@
 // App.js
-import React, { useState } from 'react';
-import GeneralContext from './GeneralContext';
+import React, { useState, useEffect } from "react";
+import GeneralContext from "./GeneralContext";
 import {
   BrowserRouter as Router,
   Routes,
@@ -11,20 +11,74 @@ import LoginPage from "./Pages/LoginPage";
 import HomePage from "./Pages/HomePage";
 import MonitoringPage from "./Pages/MonitoringPage";
 import Sidebar from "./Pages/sidebar";
-import PasswordRecovery from './Pages/PasswordRecovery';
-import PasswordChange from './Pages/PasswordChange';
-import SecurityZonePage from './Pages/SecurityZonePage';
-import FollowUpPage from './Pages/FollowUpPage';
-import UserModel from './Model/UserModel';
-import MonitoringModel from './Model/MonitoringModel';
+import PasswordRecovery from "./Pages/PasswordRecovery";
+import PasswordChange from "./Pages/PasswordChange";
+import SecurityZonePage from "./Pages/SecurityZonePage";
+import FollowUpPage from "./Pages/FollowUpPage";
+import UserModel from "./Model/UserModel";
+import MonitoringModel from "./Model/MonitoringModel";
+import useLoginModel from "./Model/LoginModel";
 
 const App = () => {
-  const [userVictim, setUserVictim] = useState(new UserModel());
-  const [userAttacker, setUserAttacker] = useState(new UserModel());
-  const [monitoringData, setMonitoringData] = useState(new MonitoringModel());
+  const { loginData } = useLoginModel();
 
+  const [userVictim, setUserVictim] = useState(() => {
+    const savedUser = localStorage.getItem(`userVictim_${loginData.username}`);
+    return savedUser ? JSON.parse(savedUser) : new UserModel();
+  });
+
+  useEffect(() => {
+    if (loginData.username) {
+      localStorage.setItem(
+        `userVictim_${loginData.username}`,
+        JSON.stringify(userVictim)
+      );
+    }
+  }, [userVictim, loginData.username]);
+
+  const [userAttacker, setUserAttacker] = useState(() => {
+    const savedUser = localStorage.getItem(
+      `userAttacker_${loginData.username}`
+    );
+    return savedUser ? JSON.parse(savedUser) : new UserModel();
+  });
+
+  useEffect(() => {
+    if (loginData.username) {
+      localStorage.setItem(
+        `userAttacker_${loginData.username}`,
+        JSON.stringify(userAttacker)
+      );
+    }
+  }, [userAttacker, loginData.username]);
+
+  const [monitoringData, setMonitoringData] = useState(() => {
+    const savedData = localStorage.getItem(
+      `monitoringData_${loginData.username}`
+    );
+    return savedData ? JSON.parse(savedData) : new MonitoringModel();
+  });
+
+  useEffect(() => {
+    if (loginData.username) {
+      localStorage.setItem(
+        `monitoringData_${loginData.username}`,
+        JSON.stringify(monitoringData)
+      );
+    }
+  }, [monitoringData, loginData.username]);
+  console.log("monitoringData", loginData.username);
   return (
-    <GeneralContext.Provider value={{ userVictim, setUserVictim, userAttacker, setUserAttacker, monitoringData, setMonitoringData }}>
+    <GeneralContext.Provider
+      value={{
+        userVictim,
+        setUserVictim,
+        userAttacker,
+        setUserAttacker,
+        monitoringData,
+        setMonitoringData,
+      }}
+    >
       <Router>
         <div className="app-container">
           <Routes>
@@ -65,8 +119,8 @@ const App = () => {
                 </div>
               }
             />
-            <Route path="/recover-password" element={<PasswordRecovery/>} />
-            <Route path="/change-password" element={<PasswordChange/>} />
+            <Route path="/recover-password" element={<PasswordRecovery />} />
+            <Route path="/change-password" element={<PasswordChange />} />
             <Route path="/" element={<Navigate to="/login" />} />{" "}
             {/* Redirige de la ruta raíz a /login */}
             {/* Aquí puedes agregar más rutas si lo necesitas */}

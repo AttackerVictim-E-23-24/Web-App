@@ -94,6 +94,7 @@ function UserView({
                 onChange={handleInputChange}
                 placeholder="juangomezca"
                 required
+                autoComplete="username"
               />
             </div>
             <div className={`field field-${user.role}`}>
@@ -107,6 +108,7 @@ function UserView({
                 onChange={handleInputChange}
                 placeholder="******"
                 required
+                autoComplete="current-password"
               />
             </div>
           </div>
