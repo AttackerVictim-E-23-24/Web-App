@@ -1,16 +1,61 @@
 // UsersTableController.jsx
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import UsersTableView from "../View/UsersTableView";
 import UsersTableModel from "../Model/UsersTableModel";
 import UserModel from "../Model/UserModel.jsx";
 
 function UsersTableController() {
   const [users, setUsers] = useState(new UsersTableModel());
+  const [searchName, setSearchName] = useState("");
+  const [searchCedula, setSearchCedula] = useState("");
+  const [filtersActive, setFiltersActive] = useState(false);
+  const [filteredUsers, setFilteredUsers] = useState([]);
+
+  const handleNameSearchChange = (event) => {
+    setSearchName(event.target.value);
+    setFiltersActive(event.target.value !== "" || searchCedula !== "");
+  };
+
+  const handleCedulaSearchChange = (event) => {
+    setSearchCedula(event.target.value);
+    setFiltersActive(event.target.value !== "" || searchName !== "");
+  };
+
+  const filterUsers = useCallback(() => {
+    if (filtersActive) {
+      return users.getUsers().filter((user) => {
+        if (user.datosPersona && user.datosPersona.cedula != null) {
+          // Caso 1: Ambos campos están llenos
+          if (searchCedula && searchName) {
+            return user.datosPersona.cedula.toString().includes(searchCedula) &&
+              user.datosPersona.name.toLowerCase().includes(searchName.toLowerCase());
+          }
+          // Caso 2: Solo el campo de cédula está lleno
+          else if (searchCedula) {
+            return user.datosPersona.cedula.toString().includes(searchCedula);
+          }
+          // Caso 3: Solo el campo de nombre está lleno
+          else if (searchName) {
+            return user.datosPersona.name.toLowerCase().includes(searchName.toLowerCase());
+          }
+        }
+        return false;
+      });
+    } else {
+      return users.getUsers();
+    }
+  }, [searchCedula, searchName, filtersActive, users]);
+
+  const handleResetSearch = () => {
+    setSearchName("");
+    setSearchCedula("");
+    setFiltersActive(false);
+  };
 
   const handleInputChange = (event, userId) => {
     const { name, value } = event.target;
-    setUsers(prevUsers => {
-      const updatedUsers = prevUsers.getUsers().map(user => {
+    setUsers((prevUsers) => {
+      const updatedUsers = prevUsers.getUsers().map((user) => {
         if (user.getId() === userId) {
           return { ...user, [name]: value };
         }
@@ -103,25 +148,28 @@ function UsersTableController() {
       status: "OK",
     };
     if (Array.isArray(data.respuesta)) {
-      const users = data.respuesta.map(user => new UserModel(
-        user.datosPersona.nombre,
-        user.datosPersona.seg_nombre,
-        user.datosPersona.apellido,
-        user.datosPersona.seg_apellido,
-        user.datosPersona.fch_nac,
-        user.datosPersona.cedula,
-        user.userName,
-        user.password,
-        user.email,
-        null, // role no está en los datos proporcionados
-        user.imei,
-        user.userTypeDto,
-        user.datosPersona.direccion,
-        null // registrationDate no está en los datos proporcionados
-      ));
+      const users = data.respuesta.map(
+        (user) =>
+          new UserModel(
+            user.datosPersona.nombre,
+            user.datosPersona.seg_nombre,
+            user.datosPersona.apellido,
+            user.datosPersona.seg_apellido,
+            user.datosPersona.fch_nac,
+            user.datosPersona.cedula,
+            user.userName,
+            user.password,
+            user.email,
+            null, // role no está en los datos proporcionados
+            user.imei,
+            user.userTypeDto.name,
+            user.datosPersona.direccion,
+            null // registrationDate no está en los datos proporcionados
+          )
+      );
       setUsers(new UsersTableModel(users));
     } else {
-      console.error('API response is not an array:', data);
+      console.error("API response is not an array:", data);
       setUsers(new UsersTableModel([]));
     }
   };
@@ -130,16 +178,52 @@ function UsersTableController() {
     fetchUsers();
   }, []);
 
+  useEffect(() => {
+    setFilteredUsers(filterUsers());
+  }, [filterUsers]);
+
   return (
     <div>
-       
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
+      >
+        <div style={{ display: "flex", gap: "10px" }}>
+          <span>Nombre:</span>
+          <input
+            type="text"
+            value={searchName}
+            onChange={handleNameSearchChange}
+            placeholder="Buscar por nombre"
+            style={{ padding: "5px", borderRadius: "5px" }}
+          />
+          <span>Cedula:</span>
+          <input
+            type="number"
+            value={searchCedula}
+            onChange={handleCedulaSearchChange}
+            placeholder="Buscar por cédula"
+            style={{ padding: "5px", borderRadius: "5px" }}
+          />
+        </div>
+        <button
+          onClick={handleResetSearch}
+          style={{ marginRight: "10px", borderRadius: "5px", width: "100px" }}
+        >
+          Ver todos
+        </button>
+      </div>
+      <hr />
+
       <UsersTableView
-      users={users.getUsers()}
-      handleInputChange={handleInputChange}
-      handleSubmit={handleSubmit}
-    />
-      
-  </div>
+        users={filteredUsers}
+        handleInputChange={handleInputChange}
+        handleSubmit={handleSubmit}
+      />
+    </div>
   );
 }
 

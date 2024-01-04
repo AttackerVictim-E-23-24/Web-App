@@ -1,12 +1,15 @@
-import React from "react";
+import React, { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import useLoginModel from "../Model/LoginModel";
 import LoginView from "../View/LoginView";
 import { BaseURL } from "./BaseURL"; // Asegúrate de que la ruta sea correcta
+import GeneralContext from "../GeneralContext";
 
 const LoginController = () => {
   const { loginData, setLoginData } = useLoginModel();
   const navigate = useNavigate();
+  const { setUserVictim, setUserAttacker, setMonitoringData } =
+  useContext(GeneralContext);
 
   const handleInputChange = (field, value) => {
     setLoginData((prevData) => ({ ...prevData, [field]: value }));
@@ -32,8 +35,13 @@ const LoginController = () => {
         throw new Error(
           `HTTP error! status: ${response.status}. Message: ${data.mensaje}`
         );
-      }else
+      } else {
+        // Establecer los datos del contexto en null antes de navegar a la página de inicio
+        setUserVictim(null);
+        setUserAttacker(null);
+        setMonitoringData(null);
         navigate("/home");
+      }
       console.log(data);
     } catch (error) {
       console.error(error);

@@ -1,13 +1,13 @@
 // MonitoringModel.js
 class MonitoringModel {
-  constructor() {
-    this.startDate = "";
-    this.frequency = "";
-    this.downtime = "";
-    this.offlineTime = "";
-    this.minDistance = "";
-    this.record = "";
-    this.endDate = "";
+  constructor(startDate , frequency , downtime , offlineTime , minDistance , record , endDate ) {
+    this.startDate = startDate;
+    this.frequency = frequency;
+    this.downtime = downtime;
+    this.offlineTime = offlineTime;
+    this.minDistance = minDistance;
+    this.record = record;
+    this.endDate = endDate;
   }
 }
 

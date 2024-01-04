@@ -10,7 +10,7 @@ const UserTypeDto = {
   AGRESOR: { id: 3, name: "Agresor" },
 };
 
-function UserController({ role }) {
+function UserController({ role, setAttackerPrintable, setVictimPrintable }) {
   const [user, setUser] = useState(new UserModel());
   const { setUserVictim, setUserAttacker } = useContext(GeneralContext);
   const [responseMessage, setResponseMessage] = useState("");
@@ -70,8 +70,10 @@ function UserController({ role }) {
       // Inicializa el usuario correspondiente
       if (role === "victima") {
         setUserVictim(user);
+        setVictimPrintable(false);
       } else if (role === "agresor") {
         setUserAttacker(user);
+        setAttackerPrintable(false);
       }
     }
 

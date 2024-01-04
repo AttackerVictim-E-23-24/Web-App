@@ -7,7 +7,7 @@ import GeneralContext from '../GeneralContext';
 
 const MonitoringFormController = () => {
   const [monitoring, setMonitoring] = useState(new MonitoringModel());
-  const { setMonitoringData } = useContext(GeneralContext);
+  const { setMonitoringData, userVictim, userAttacker } = useContext(GeneralContext); // Añade userVictim y userAttacker
   const [responseMessage, setResponseMessage] = useState("");
   const [responseSuccess, setResponseSuccess] = useState(false);
   
@@ -19,39 +19,39 @@ const MonitoringFormController = () => {
   const submitForm = async (event) => {
     event.preventDefault();
 
-    const response = await fetch(`${BaseURL.apiUrl}/monitoring/setMonitoring`, {
+    const response = await fetch(`${BaseURL.apiUrl}/monitoreo/setMonitoreo`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        startDate: monitoring.startDate,
-        frequency: monitoring.frequency,
-        downtime: monitoring.downtime,
-        offlineTime: monitoring.offlineTime,
-        minDistance: monitoring.minDistance,
-        record: monitoring.record,
-        endDate: monitoring.endDate,
+        frecuencia: monitoring.frequency,
+        tiempoInactividad: monitoring.downtime,
+        tiempoOffline: monitoring.offlineTime,
+        distanciaAlejamiento: monitoring.minDistance,
+        cedulaAtacante: userAttacker.cedula, // Usa userAttacker.cedula
+        cedulaVictima: userVictim.cedula, // Usa userVictim.cedula
       }),
     });
-    const data = await response.json();
+
     if (!response.ok) {
       console.error(
         "Error en la petición:",
         response.status,
         response.statusText
       );
-      setResponseMessage(data.mensaje);
+      setResponseMessage("Error en la petición");
       setResponseSuccess(false);
       return;
     }
+    
     console.log("La petición fue exitosa");
-    setResponseMessage(data.mensaje);
-    setResponseSuccess(data.respuesta);
-  
+    setResponseMessage("La petición fue exitosa");
+    setResponseSuccess(true);
+    
     // Actualiza el estado monitoringData con los datos del monitoreo
     setMonitoringData(monitoring);
-  
+    
     // Borra los inputs
     setMonitoring(new MonitoringModel());
   };

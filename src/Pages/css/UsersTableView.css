@@ -14,16 +14,16 @@
   overflow-y: auto; /* Esto hará que el contenido se desplace */
 }
 
-.table-container th {padding-left: 20px; /* Ajusta esto al espacio que desees entre las columnas */
-  padding-right: 20px;
+.table-container th {
+  padding-right: 10px;
   text-align: center;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-.table-container td {padding-left: 20px; /* Ajusta esto al espacio que desees entre las columnas */
-  padding-right: 20px;
+.table-container td {
+  padding-right: 10px;
   text-align: center;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -31,5 +31,49 @@
 }
 
 .table-container td input {
-  width: 100%; /* Esto hará que el ancho del input sea igual al del td */
+  width: 90%; /* Esto hará que el ancho del input sea igual al del td */
+}
+.table-container td .row-container {
+  display: flex;
+  justify-content: space-between;
+}
+
+.table-container td .row-container .column-full-name{
+  width: 200px; /* Ajusta esto al ancho que desees */
+}
+
+.table-container td .row-container .column-cedula {
+  width: 110px; /* Ajusta esto al ancho que desees */
+}
+
+.table-container td .row-container .column-age {
+  width: 60px; /* Ajusta esto al ancho que desees */
+}
+
+.table-container td .row-container .column-birth-date {
+  width: 200px; /* Ajusta esto al ancho que desees */
+}
+
+.table-container td .row-container .column-username {
+  width: 200px; /* Ajusta esto al ancho que desees */
+}
+
+.table-container td .row-container .column-email {
+  width: 200px; /* Ajusta esto al ancho que desees */
+}
+
+.table-container td .row-container .column-role {
+  width: 200px; /* Ajusta esto al ancho que desees */
+}
+
+.table-container td .row-container .column-imei {
+  width: 200px; /* Ajusta esto al ancho que desees */
+}
+
+.table-container td .row-container .column-address {
+  width: 200px; /* Ajusta esto al ancho que desees */
+}
+
+.table-container td .row-container .column-registration-date {
+  width: 200px; /* Ajusta esto al ancho que desees */
 }

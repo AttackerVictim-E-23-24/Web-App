@@ -1,42 +1,49 @@
 // MonitoringPage.jsx
-import React, { useContext } from "react";
-import GeneralContext from "../GeneralContext";
-import NewUserController from "../Controller/UserController";
+import React, { useEffect, useState } from "react";
+import UserController from "../Controller/UserController";
 import MonitoringController from "../Controller/MonitoringController";
 import "../Pages/css/monitoring.css";
 
 const MonitoringPage = () => {
-  const { userVictim, userAttacker, monitoringData } =
-    useContext(GeneralContext);
+  const [content, setContent] = useState(null);
+  const [victimPrintable, setVictimPrintable] = useState(true); // Nueva variable de estado
+  const [attackerPrintable, setAttackerPrintable] = useState(true); // Nueva variable de estado
 
-  let content;
-
-  if (!userVictim) {
-    content = (
-      <div>
-      <h2>Registrar Victima</h2>
-      <hr />
-        <NewUserController role="victima" />
-      </div>
-    );
-  } else if (!userAttacker) {
-    content = (
-      <div>
-      <h2>Registrar Agresor</h2>
-      <hr />
-        <NewUserController role="agresor" />
-      </div>
-    );
-  } else if (!monitoringData) {}
-  
-    content = (
-      <div>
-      <h2>Registrar Monitoreo</h2>
-      <hr />
-        <MonitoringController />
-      </div>
-    );
-
+  useEffect(() => {
+    if (victimPrintable) {
+      setContent(
+        <div>
+          <h2>Registrar Victima</h2>
+          <hr />
+          <UserController
+            role="victima"
+            setVictimPrintable={setVictimPrintable}
+          />{" "}
+          {/* Pasar isSet y setIsSet */}
+        </div>
+      );
+    } else if (attackerPrintable) {
+      setContent(
+        <div>
+          <h2>Registrar Agresor</h2>
+          <hr />
+          <UserController
+            role="agresor"
+            setAttackerPrintable={setAttackerPrintable}
+          />{" "}
+          {/* Pasar isSet y setIsSet */}
+        </div>
+      );
+    } else {
+      setContent(
+        <div>
+          <h2>Registrar Monitoreo</h2>
+          <hr />
+          <MonitoringController /> {/* Pasar isSet y setIsSet */}
+        </div>
+      );
+    }
+  }, [victimPrintable, attackerPrintable]); // Dependiendo de isSet
 
   return (
     <div className="main-container">
