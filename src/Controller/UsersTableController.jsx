@@ -1,15 +1,22 @@
 // UsersTableController.jsx
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState, useCallback, useContext } from "react";
+import { useNavigate } from "react-router-dom";
 import UsersTableView from "../View/UsersTableView";
 import UsersTableModel from "../Model/UsersTableModel";
 import UserModel from "../Model/UserModel.jsx";
+import MonitoringModel from "../Model/MonitoringModel.jsx";
+import { BaseURL } from "./BaseURL";
+import GeneralContext from "../GeneralContext";
 
 function UsersTableController() {
+  const navigate = useNavigate();
   const [users, setUsers] = useState(new UsersTableModel());
   const [searchName, setSearchName] = useState("");
   const [searchCedula, setSearchCedula] = useState("");
   const [filtersActive, setFiltersActive] = useState(false);
   const [filteredUsers, setFilteredUsers] = useState([]);
+  const { setMonitoringData, setUserAttacker, setUserVictim } =
+    useContext(GeneralContext);
 
   const handleNameSearchChange = (event) => {
     setSearchName(event.target.value);
@@ -27,8 +34,12 @@ function UsersTableController() {
         if (user.datosPersona && user.datosPersona.cedula != null) {
           // Caso 1: Ambos campos están llenos
           if (searchCedula && searchName) {
-            return user.datosPersona.cedula.toString().includes(searchCedula) &&
-              user.datosPersona.name.toLowerCase().includes(searchName.toLowerCase());
+            return (
+              user.datosPersona.cedula.toString().includes(searchCedula) &&
+              user.datosPersona.name
+                .toLowerCase()
+                .includes(searchName.toLowerCase())
+            );
           }
           // Caso 2: Solo el campo de cédula está lleno
           else if (searchCedula) {
@@ -36,7 +47,9 @@ function UsersTableController() {
           }
           // Caso 3: Solo el campo de nombre está lleno
           else if (searchName) {
-            return user.datosPersona.name.toLowerCase().includes(searchName.toLowerCase());
+            return user.datosPersona.name
+              .toLowerCase()
+              .includes(searchName.toLowerCase());
           }
         }
         return false;
@@ -65,40 +78,111 @@ function UsersTableController() {
     });
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event, username) => {
     event.preventDefault();
-    // Código para manejar envíos de formularios
+
+    try {
+      const response = await fetch(
+        `${BaseURL.apiUrl}/monitoreo/getMonitoreo/${username}`
+      );
+      const data = await response.json();
+
+      if (data.status) {
+        const monitoring = data.respuesta;
+        const attacker = monitoring.atacanteUser;
+        const victim = monitoring.victimaUser;
+
+        const monitoringModel = new MonitoringModel(
+          monitoring.id,
+          monitoring.startDate,
+          monitoring.frequency,
+          monitoring.downtime,
+          monitoring.offlineTime,
+          monitoring.minDistance,
+          monitoring.record,
+          monitoring.endDate
+        );
+
+        const attackerModel = new UserModel(
+          attacker.datosPersona.nombre,
+          attacker.datosPersona.seg_nombre,
+          attacker.datosPersona.apellido,
+          attacker.datosPersona.seg_apellido,
+          attacker.datosPersona.fch_nac,
+          attacker.datosPersona.cedula,
+          attacker.userName,
+          attacker.password,
+          attacker.email,
+          attacker.role,
+          attacker.imei,
+          attacker.userTypeDto,
+          attacker.datosPersona.direccion,
+          attacker.registrationDate
+        );
+
+        const victimModel = new UserModel(
+          victim.datosPersona.nombre,
+          victim.datosPersona.seg_nombre,
+          victim.datosPersona.apellido,
+          victim.datosPersona.seg_apellido,
+          victim.datosPersona.fch_nac,
+          victim.datosPersona.cedula,
+          victim.userName,
+          victim.password,
+          victim.email,
+          victim.role,
+          victim.imei,
+          victim.userTypeDto,
+          victim.datosPersona.direccion,
+          victim.registrationDate
+        );
+
+        setMonitoringData(monitoringModel);
+        setUserAttacker(attackerModel);
+        setUserVictim(victimModel);
+
+        // Redirige al usuario a /follow-up
+        navigate("/follow-up");
+        // Código para enviar data a seguimiento
+      } else {
+        console.error("API response status is false:", data);
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
+  const fetchUsers = async () => {
+    const response = await fetch(`${BaseURL.apiUrl}/users/getAll`);
+    const data = await response.json();
+
+    if (Array.isArray(data.respuesta)) {
+      const users = data.respuesta.map(
+        (user) =>
+          new UserModel(
+            user.datosPersona.nombre,
+            user.datosPersona.seg_nombre,
+            user.datosPersona.apellido,
+            user.datosPersona.seg_apellido,
+            user.datosPersona.fch_nac,
+            user.datosPersona.cedula,
+            user.userName,
+            user.password,
+            user.email,
+            null, // role no está en los datos proporcionados
+            user.imei,
+            user.userTypeDto.name,
+            user.datosPersona.direccion,
+            null // registrationDate no está en los datos proporcionados
+          )
+      );
+      setUsers(new UsersTableModel(users));
+    } else {
+      console.error("API response is not an array:", data);
+      setUsers(new UsersTableModel([]));
+    }
   };
   /*
-  useEffect(() => {
-    const fetchUsers = async () => {
-      const response = await fetch(`${BaseURL.apiUrl}/users/getAll`);
-      const data = await response.json();
-  
-      if (Array.isArray(data.respuesta)) { // Verifica si data.respuesta es un array
-        const users = data.respuesta.map(user => {
-          // Crea una nueva instancia de UserModel y establece sus propiedades con los datos del usuario
-          const userModel = new UserModel();
-          userModel.id = user.id;
-          userModel.userName = user.userName;
-          userModel.imei = user.imei;
-          userModel.password = user.password;
-          userModel.email = user.email;
-          userModel.datosPersona = user.datosPersona;
-          userModel.userTypeDto = user.userTypeDto;
-  
-          return userModel;
-        });
-        setUsers(new UsersTableModel(users));
-      } else {
-        console.error('API response is not an array:', data);
-        setUsers(new UsersTableModel([])); // Establece users como un UsersTableModel vacío si la respuesta de la API no es un array
-      }
-    };
-  
-    fetchUsers();
-  }, []);
-  */
   const fetchUsers = async () => {
     // Simulación de la respuesta del servidor
     const data = {
@@ -174,6 +258,7 @@ function UsersTableController() {
     }
   };
 
+  */
   useEffect(() => {
     fetchUsers();
   }, []);

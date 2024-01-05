@@ -11,6 +11,7 @@ function UsersTableView({ users, handleInputChange, handleSubmit }) {
             <tr>
               <td>
                 <div className="row-container">
+                  <th className="column-age">usar</th>
                   <th className="column-full-name">Nombre completo</th>
                   <th className="column-cedula">Cédula</th>
                   <th className="column-age">Edad</th>
@@ -33,7 +34,10 @@ function UsersTableView({ users, handleInputChange, handleSubmit }) {
                 <tr key={user.getId()} className="table-row">
                   <td>
                     <div className="row-container">
-                      <form onSubmit={(e) => handleSubmit(e, user.getId())}>
+                      <form onSubmit={(e) => handleSubmit(e, user.getUserName())}>
+                        <td className="column-age">
+                          <button type="submit"></button>
+                        </td>
                         <td className="column-full-name">
                           <input
                             type="text"
