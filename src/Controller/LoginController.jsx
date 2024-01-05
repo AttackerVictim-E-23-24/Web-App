@@ -1,13 +1,13 @@
 // LoginController.jsx
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import useLoginModel from "../Model/LoginModel";
+import LoginModel from "../Model/LoginModel";
 import LoginView from "../View/LoginView";
 import { BaseURL } from "./BaseURL"; // Asegúrate de que la ruta sea correcta
 import GeneralContext from "../GeneralContext";
 
 const LoginController = () => {
-  const { loginData, setLoginData } = useLoginModel();
+  const [loginData, setLoginData] = useState(new LoginModel());
   const navigate = useNavigate();
   const { setUserVictim, setUserAttacker, setMonitoringData, setLoginData: setContextLoginData } =
   useContext(GeneralContext);

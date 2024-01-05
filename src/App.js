@@ -17,10 +17,17 @@ import SecurityZonePage from "./Pages/SecurityZonePage";
 import FollowUpPage from "./Pages/FollowUpPage";
 import UserModel from "./Model/UserModel";
 import MonitoringModel from "./Model/MonitoringModel";
-import useLoginModel from "./Model/LoginModel";
+import LoginModel from "./Model/LoginModel";
 
 const App = () => {
-  const { loginData, setLoginData } = useLoginModel();
+  const [loginData, setLoginData] = useState(() => {
+    const savedLoginData = localStorage.getItem("loginData");
+    return savedLoginData ? JSON.parse(savedLoginData) : new LoginModel();
+  });
+
+  useEffect(() => {
+    localStorage.setItem("loginData", JSON.stringify(loginData));
+  }, [loginData]);
 
   const [userVictim, setUserVictim] = useState(() => {
     const savedUser = localStorage.getItem(`userVictim_${loginData.username}`);
@@ -112,7 +119,7 @@ const App = () => {
       );
     }
   }, [monitoringData, loginData.username]);
-  console.log("monitoringData", loginData.username);
+  console.log("usuario iniciado:", loginData.username);
 
   return (
     <GeneralContext.Provider
@@ -124,7 +131,7 @@ const App = () => {
         monitoringData,
         setMonitoringData,
         loginData, // Agrega loginData al contexto
-        setLoginData
+        setLoginData,
       }}
     >
       <Router>
