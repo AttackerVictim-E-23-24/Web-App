@@ -1,7 +1,7 @@
 // MapModel.js
 class MapModel {
   constructor() {
-    this.center = { lat: 41.3851, lng: 2.1734 };
+    this.center = { lat: 10.185660968064957, lng: -64.68570033979893 };
     this.polygons = []; // Estado para los polígonos
     this.manualPoints = []; // Estado para los puntos manuales
     this.currentPolygon = []; // Estado para el polígono actual
@@ -38,6 +38,7 @@ class MapModel {
     this.polygons.push(this.currentPolygon); // Agrega el polígono actual a los polígonos
     this.currentPolygon = []; // Limpia el polígono actual
   }
+  
   addPointToComplexPolygon(lat, lng) {
     this.currentPolygon.push({ lat, lng }); // Agrega un punto al polígono complejo actual
   }

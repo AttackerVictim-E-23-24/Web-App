@@ -20,11 +20,28 @@ import MonitoringModel from "./Model/MonitoringModel";
 import useLoginModel from "./Model/LoginModel";
 
 const App = () => {
-  const { loginData } = useLoginModel();
+  const { loginData, setLoginData } = useLoginModel();
 
   const [userVictim, setUserVictim] = useState(() => {
     const savedUser = localStorage.getItem(`userVictim_${loginData.username}`);
-    return savedUser ? JSON.parse(savedUser) : new UserModel();
+    return savedUser
+      ? JSON.parse(savedUser)
+      : new UserModel(
+          "John",
+          "Doe",
+          "Doe",
+          "Doe",
+          new Date(),
+          "default cedula",
+          "default username",
+          "default password",
+          "default email",
+          "default role",
+          "default imei",
+          "default userTypeDto",
+          "default direccion",
+          new Date()
+        );
   });
 
   useEffect(() => {
@@ -40,7 +57,24 @@ const App = () => {
     const savedUser = localStorage.getItem(
       `userAttacker_${loginData.username}`
     );
-    return savedUser ? JSON.parse(savedUser) : new UserModel();
+    return savedUser
+      ? JSON.parse(savedUser)
+      : new UserModel(
+          "John",
+          "Doe",
+          "Doe",
+          "Doe",
+          new Date(),
+          "default cedula",
+          "default username",
+          "default password",
+          "default email",
+          "default role",
+          "default imei",
+          "default userTypeDto",
+          "default direccion",
+          new Date()
+        );
   });
 
   useEffect(() => {
@@ -56,7 +90,18 @@ const App = () => {
     const savedData = localStorage.getItem(
       `monitoringData_${loginData.username}`
     );
-    return savedData ? JSON.parse(savedData) : new MonitoringModel();
+    return savedData
+      ? JSON.parse(savedData)
+      : new MonitoringModel(
+          1,
+          new Date(),
+          "default frequency",
+          "default downtime",
+          "default offlineTime",
+          "default minDistance",
+          "default record",
+          new Date()
+        );
   });
 
   useEffect(() => {
@@ -68,6 +113,7 @@ const App = () => {
     }
   }, [monitoringData, loginData.username]);
   console.log("monitoringData", loginData.username);
+
   return (
     <GeneralContext.Provider
       value={{
@@ -77,6 +123,8 @@ const App = () => {
         setUserAttacker,
         monitoringData,
         setMonitoringData,
+        loginData, // Agrega loginData al contexto
+        setLoginData
       }}
     >
       <Router>

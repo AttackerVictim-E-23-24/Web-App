@@ -8,8 +8,11 @@ const useLoginModel = () => {
   });
 
   useEffect(() => {
-    localStorage.setItem('loginData', JSON.stringify(loginData));
+    if (loginData) { // Solo guarda en localStorage si loginData no es null
+      localStorage.setItem('loginData', JSON.stringify(loginData));
+    }
   }, [loginData]);
+
 
   return {
     loginData,

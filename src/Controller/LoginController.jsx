@@ -1,3 +1,4 @@
+// LoginController.jsx
 import React, { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import useLoginModel from "../Model/LoginModel";
@@ -8,7 +9,7 @@ import GeneralContext from "../GeneralContext";
 const LoginController = () => {
   const { loginData, setLoginData } = useLoginModel();
   const navigate = useNavigate();
-  const { setUserVictim, setUserAttacker, setMonitoringData } =
+  const { setUserVictim, setUserAttacker, setMonitoringData, setLoginData: setContextLoginData } =
   useContext(GeneralContext);
 
   const handleInputChange = (field, value) => {
@@ -40,6 +41,7 @@ const LoginController = () => {
         setUserVictim(null);
         setUserAttacker(null);
         setMonitoringData(null);
+        setContextLoginData(loginData); // Guarda loginData en el contexto
         navigate("/home");
       }
       console.log(data);
