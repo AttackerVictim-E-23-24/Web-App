@@ -5,10 +5,8 @@ import MonitoringModel from '../Model/MonitoringModel';
 import MapView from '../View/MapView';
 import { BaseURL } from './BaseURL';
 import GeneralContext from '../GeneralContext';
-import useLoginModel from "../Model/LoginModel";
 
 const MapController = ({ canDrawPolygons }) => {
-  const { loginData } = useLoginModel();
   const [mapModel] = useState(new MapModel());
   const [infoWindow, setInfoWindow] = useState(null);
   const [manualPoints, setManualPoints] = useState([]);
@@ -40,16 +38,14 @@ const MapController = ({ canDrawPolygons }) => {
     const { id, createdAt } = data.respuesta;
     const monitoringModel = new MonitoringModel(id, new Date(createdAt), null, null, null, null, null, null);
     setMonitoringData(monitoringModel);
-    console.log('monitoringData.startDate:', monitoringData.startDate);
-    console.log('loginData.userName:', loginData.userName);
-    
-    console.log("peticion de geolocationZona",mapModel.getPolygons().lat);
+  
+    console.log("peticion de geolocationZona",mapModel.getPolygons());
     const geoDataToSend = mapModel.getPolygons().map(point => ({
+      
       latitud: point.lat,
       longitud: point.lng,
       createdAt: monitoringData.startDate,
       usuarioDto: {
-        userName: loginData.userName
       }
     }));
   

@@ -5,12 +5,8 @@ class PointModel {
     this.longitude = longitude;
   }
 
-  getPoints() {
-    return this.points;
-  }
-
   addPoint(latitude, longitude) {
-    const point = new Point(latitude, longitude);
+    const point = new PointModel(latitude, longitude);
     this.points.push(point); // Nuevo método para agregar un punto
   }
 

@@ -1,8 +1,8 @@
 import React, { useEffect, useState, useContext } from "react";
-import { GoogleMap, LoadScript, Marker } from "@react-google-maps/api";
 import axios from "axios";
 import { BaseURL } from "./BaseURL";
 import GeneralContext from "../GeneralContext";
+import PointView from "../View/PointView"; // Importa PointView
 
 const PointController = ({ onMarkerClick }) => {
   const { userAttacker, userVictim } = useContext(GeneralContext);
@@ -26,47 +26,34 @@ const PointController = ({ onMarkerClick }) => {
   useEffect(() => {
     const fetchLocations = async () => {
       try {
-        const attackerResponse = await axios.get(
-          `${BaseURL.apiUrl}/users/getGeolocation/${userAttacker.userName}`
-        );
-        const victimResponse = await axios.get(
-          `${BaseURL.apiUrl}/users/getGeolocation/${userVictim.userName}`
-        );
-
-        if (attackerResponse.status === 200 && victimResponse.status === 200) {
-          setPoints([attackerResponse.data, victimResponse.data]);
-        } else {
-          alert("Error fetching locations");
+        if (userAttacker && userVictim) {
+          const attackerResponse = await axios.get(
+            `${BaseURL.apiUrl}/users/getGeolocation/${userAttacker.userName}`
+          );
+          const victimResponse = await axios.get(
+            `${BaseURL.apiUrl}/users/getGeolocation/${userVictim.userName}`
+          );
+  
+          if (attackerResponse.status === 200 && victimResponse.status === 200) {
+            setPoints([attackerResponse.data, victimResponse.data]);
+          } else {
+            alert("Error fetching locations");
+          }
         }
       } catch (error) {
         console.error(error);
         alert("Error fetching locations");
       }
     };
-
+  
     fetchLocations();
-  }, [userAttacker.userName, userVictim.userName]);
+  }, [userAttacker, userVictim]);
 
-  const mapStyles = {
-    height: "100vh",
-    width: "100%",
-    borderRadius: "20px",
-  };
 
   return (
     <div>
       <div className="mapContainer">
-        <LoadScript googleMapsApiKey="AIzaSyCccZNiLlQVuUUN__qwtUC5GdpJveXQ1s8">
-          <GoogleMap mapContainerStyle={mapStyles} zoom={14} center={center}>
-            {points.map((point, index) => (
-              <Marker
-                key={index}
-                position={point}
-                onClick={() => onMarkerClick(point)}
-              />
-            ))}
-          </GoogleMap>
-        </LoadScript>
+          <PointView center={center} points={points} onMarkerClick={onMarkerClick} />
         <br />
       </div>
       <br />
