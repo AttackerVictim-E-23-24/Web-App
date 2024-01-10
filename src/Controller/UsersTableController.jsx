@@ -87,66 +87,60 @@ function UsersTableController() {
       );
       const data = await response.json();
 
-      if (data.status) {
-        const monitoring = data.respuesta;
-        const attacker = monitoring.atacanteUser;
-        const victim = monitoring.victimaUser;
+      console.log("API response", data);
 
-        const monitoringModel = new MonitoringModel(
-          monitoring.id,
-          monitoring.startDate,
-          monitoring.frequency,
-          monitoring.downtime,
-          monitoring.offlineTime,
-          monitoring.minDistance,
-          monitoring.record,
-          monitoring.endDate
-        );
+      const monitoringModel = new MonitoringModel(
+        data.id,
+        null, // startDate no está en la respuesta
+        data.frecuencia,
+        data.tiempoInactividad,
+        data.tiempoOffline,
+        data.distanciaAlejamiento,
+        null, // record no está en la respuesta
+        null  // endDate no está en la respuesta
+      );
+      
+      const attackerModel = new UserModel(
+        data.atacanteUser.datosPersona.nombre,
+        data.atacanteUser.datosPersona.seg_nombre,
+        data.atacanteUser.datosPersona.apellido,
+        data.atacanteUser.datosPersona.seg_apellido,
+        data.atacanteUser.datosPersona.fch_nac,
+        data.atacanteUser.datosPersona.cedula,
+        data.atacanteUser.userName,
+        data.atacanteUser.password,
+        data.atacanteUser.email,
+        data.atacanteUser.userTypeDto.name, // role no está en la respuesta, se usa userTypeDto.name
+        data.atacanteUser.imei,
+        data.atacanteUser.userTypeDto, // userTypeDto está en la respuesta
+        data.atacanteUser.datosPersona.direccion,
+        null // registrationDate no está en la respuesta
+      );
+      
+      const victimModel = new UserModel(
+        data.victimaUser.datosPersona.nombre,
+        data.victimaUser.datosPersona.seg_nombre,
+        data.victimaUser.datosPersona.apellido,
+        data.victimaUser.datosPersona.seg_apellido,
+        data.victimaUser.datosPersona.fch_nac,
+        data.victimaUser.datosPersona.cedula,
+        data.victimaUser.userName,
+        data.victimaUser.password,
+        data.victimaUser.email,
+        data.victimaUser.userTypeDto.name, // role no está en la respuesta, se usa userTypeDto.name
+        data.victimaUser.imei,
+        data.victimaUser.userTypeDto, // userTypeDto está en la respuesta
+        data.victimaUser.datosPersona.direccion,
+        null // registrationDate no está en la respuesta
+      );
 
-        const attackerModel = new UserModel(
-          attacker.datosPersona.nombre,
-          attacker.datosPersona.seg_nombre,
-          attacker.datosPersona.apellido,
-          attacker.datosPersona.seg_apellido,
-          attacker.datosPersona.fch_nac,
-          attacker.datosPersona.cedula,
-          attacker.userName,
-          attacker.password,
-          attacker.email,
-          attacker.role,
-          attacker.imei,
-          attacker.userTypeDto,
-          attacker.datosPersona.direccion,
-          attacker.registrationDate
-        );
+      setMonitoringData(monitoringModel);
+      setUserAttacker(attackerModel);
+      setUserVictim(victimModel);
 
-        const victimModel = new UserModel(
-          victim.datosPersona.nombre,
-          victim.datosPersona.seg_nombre,
-          victim.datosPersona.apellido,
-          victim.datosPersona.seg_apellido,
-          victim.datosPersona.fch_nac,
-          victim.datosPersona.cedula,
-          victim.userName,
-          victim.password,
-          victim.email,
-          victim.role,
-          victim.imei,
-          victim.userTypeDto,
-          victim.datosPersona.direccion,
-          victim.registrationDate
-        );
-
-        setMonitoringData(monitoringModel);
-        setUserAttacker(attackerModel);
-        setUserVictim(victimModel);
-
-        // Redirige al usuario a /follow-up
-        navigate("/follow-up");
-        // Código para enviar data a seguimiento
-      } else {
-        console.error("API response status is false:", data);
-      }
+      // Redirige al usuario a /follow-up
+      navigate("/follow-up");
+      // Código para enviar data a seguimiento
     } catch (error) {
       console.error("Error:", error);
     }
@@ -155,7 +149,12 @@ function UsersTableController() {
   const fetchUsers = async () => {
     const response = await fetch(`${BaseURL.apiUrl}/users/getAll`);
     const data = await response.json();
-
+    const roleMap = {
+      1: "Admin",
+      2: "Victima",
+      3: "Agresor",
+      // Agrega más roles aquí si es necesario
+    };
     if (Array.isArray(data.respuesta)) {
       const users = data.respuesta.map(
         (user) =>
@@ -169,7 +168,7 @@ function UsersTableController() {
             user.userName,
             user.password,
             user.email,
-            null, // role no está en los datos proporcionados
+            roleMap[user.userTypeDto.id],
             user.imei,
             user.userTypeDto.name,
             user.datosPersona.direccion,

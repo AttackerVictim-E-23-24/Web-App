@@ -18,40 +18,49 @@ function UserController({ role, setAttackerPrintable, setVictimPrintable }) {
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
-    setUser({ ...user, [name]: value });
+    let updatedValue = value;
+  
+    if (name === 'birthDate') {
+      updatedValue = new Date(value);
+    }
+  
+    setUser({ ...user, [name]: updatedValue });
   };
 
 
   const handleFormSubmit = async (event) => {
     event.preventDefault();
 
-
     const userTypeDto =
-      role === "Victima" ? UserTypeDto.VICTIMA : UserTypeDto.AGRESOR;
-
+      role === "victima" ? UserTypeDto.VICTIMA : UserTypeDto.AGRESOR;
+    const formattedBirthDate = user.birthDate ? new Date(user.birthDate).toISOString().split('T')[0] : '';
+  
     const datosPersona = {
       nombre: user.firstName,
       seg_nombre: user.secondName,
       apellido: user.lastName,
       seg_apellido: user.secondLastName,
       cedula: user.cedula,
-      fch_nac: user.birthDate,
+      fch_nac: formattedBirthDate,
       direccion: user.address,
     };
-
+    console.log(datosPersona);
+  
+    const requestBody = {
+      userName: user.userName,
+      imei: user.imei,
+      password: user.password,
+      userTypeDto,
+      email: user.email,
+      datosPersona,
+    };
+  
     const response = await fetch(`${BaseURL.apiUrl}/users/setUser`, {
-      method: "POST",
+      method: "post",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({
-        userName: user.userName,
-        imei: user.imei,
-        password: user.password,
-        userTypeDto,
-        email: user.email,
-        datosPersona,
-      }),
+      body: JSON.stringify(requestBody),
     });
 
     if (!response.ok) {

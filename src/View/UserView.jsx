@@ -9,6 +9,7 @@ function UserView({
   responseMessage,
   responseSuccess,
 }) {
+  const roleLabel = user.role === 'victima' ? 'de la víctima' : 'del agresor';
   return (
     <div>
       <form id="userForm" method="POST" onSubmit={handleSubmit}>
@@ -18,7 +19,7 @@ function UserView({
         <div>
           <div className="row">
             <div className={`field field-${user.role}`}>
-              <label htmlFor="firstName">Primer nombre del {user.role}</label>
+              <label htmlFor="firstName">Primer nombre {roleLabel}</label>
               <input
                 id="firstName"
                 name="firstName"
@@ -28,7 +29,7 @@ function UserView({
               />
             </div>
             <div className={`field field-${user.role}`}>
-              <label htmlFor="secondName">Segundo nombre del {user.role}</label>
+              <label htmlFor="secondName">Segundo nombre {roleLabel}</label>
               <input
                 id="secondName"
                 name="secondName"
@@ -39,7 +40,7 @@ function UserView({
           </div>
           <div className="row">
             <div className={`field field-${user.role}`}>
-              <label htmlFor="lastName">Primer apellido del {user.role}</label>
+              <label htmlFor="lastName">Primer apellido {roleLabel}</label>
               <input
                 id="lastName"
                 name="lastName"
@@ -50,7 +51,7 @@ function UserView({
             </div>
             <div className={`field field-${user.role}`}>
               <label htmlFor="secondLastName">
-                Segundo apellido del {user.role}
+                Segundo apellido {roleLabel}
               </label>
               <input
                 id="secondLastName"
@@ -62,7 +63,7 @@ function UserView({
           </div>
           <div className="row">
             <div className={`field field-${user.role}`}>
-              <label htmlFor="cedula">Cédula del {user.role}</label>
+              <label htmlFor="cedula">Cédula {roleLabel}</label>
               <input
                 id="cedula"
                 name="cedula"
@@ -72,7 +73,7 @@ function UserView({
               />
             </div>
             <div className={`field field-${user.role}`}>
-              <label htmlFor="email">Correo electrónico del {user.role}</label>
+              <label htmlFor="email">Correo electrónico {roleLabel}</label>
               <input
                 id="email"
                 name="email"
@@ -86,7 +87,7 @@ function UserView({
           <div className="row">
             <div className={`field field-${user.role}`}>
               <label htmlFor="userName">
-                Nombre de usuario del {user.role}
+                Nombre de usuario {roleLabel}
               </label>
               <input
                 id="userName"
@@ -99,7 +100,7 @@ function UserView({
             </div>
             <div className={`field field-${user.role}`}>
               <label htmlFor="password">
-                Nombre de usuario del {user.role}
+                Nombre de usuario {roleLabel}
               </label>
               <input
                 id="password"
@@ -114,7 +115,7 @@ function UserView({
           </div>
           <div className="row">
             <div className={`field field-${user.role}`}>
-              <label htmlFor="imei">IMEI del {user.role}</label>
+              <label htmlFor="imei">IMEI {roleLabel}</label>
               <input
                 id="imei"
                 name="imei"
@@ -124,12 +125,12 @@ function UserView({
               />
             </div>
             <div className={`field field-${user.role}`}>
-              <label htmlFor="startBirthDate">
-                Fecha de nacimiento del {user.role}
+              <label htmlFor="birthDate">
+                Fecha de nacimiento {roleLabel}
               </label>
               <input
-                id="startBirthDate"
-                name="startBirthDate"
+                id="birthDate"
+                name="birthDate"
                 type="date"
                 onChange={handleInputChange}
                 required
@@ -139,7 +140,7 @@ function UserView({
           <div className="">
             <div className={`field field-${user.role}`}>
               <label htmlFor="address">
-                Direccion de domicilio del {user.role}
+                Direccion de domicilio {roleLabel}
               </label>
               <input
                 id="address"

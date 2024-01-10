@@ -19,6 +19,10 @@ const PointView = ({ center, points, onMarkerClick }) => {
                 key={index}
                 position={point}
                 onClick={() => onMarkerClick(point)}
+                icon={{
+                  url: `http://maps.google.com/mapfiles/ms/icons/${index === 0 ? 'red' : 'blue'}-dot.png`,
+                  scaledSize: new google.maps.Size(index === 1 ? 60 : 40, index === 1 ? 60 : 40) 
+                }}
               />
             ))}
           </GoogleMap>

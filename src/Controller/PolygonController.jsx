@@ -64,7 +64,7 @@ const PolygonController = () => {
 
   const sendData = async (dataToSend) => {
     const response = await fetch(`${BaseURL.apiUrl}/zonasSeg/setZonaSeg`, {
-      method: "POST",
+      method: "post",
       headers: {
         "Content-Type": "application/json",
       },
@@ -87,7 +87,7 @@ const PolygonController = () => {
 
   const sendGeoData = async (geoDataToSend) => {
     const geoResponse = await fetch(
-      `${BaseURL.apiUrl}/users/setCoordenadasZona`,
+      `${BaseURL.apiUrl}/zonasSeg/setGeolocationZona`,
       {
         method: "POST",
         headers: {
@@ -139,19 +139,68 @@ const PolygonController = () => {
           latitud: point.lat,
           longitud: point.lng,
           createdAt: monitoringData.startDate,
-          usuarioDto: {
-            userName: userAttacker.userName,
+          zonaSegDto: {
+            id: monitoringData.id,
           },
         }))
       );
       console.log("geoDataToSend", geoDataToSend);
 
       const geoData = await sendGeoData(geoDataToSend);
-      if (geoData) {
+      if (!geoData.error) {
         console.log(geoData);
+        setPolygons([]); // Reinicia los puntos de la zona de seguridad
+      } else {
+        console.error("Error al enviar los datos geográficos:", geoData.error);
       }
     }
   };
+
+  useEffect(() => {
+    const fetchZones = async () => {
+      const response = await fetch(
+        `${BaseURL.apiUrl}/zonasSeg/getAllByUsername/${userAttacker.userName}`
+      );
+      const zoneData = await response.json();
+
+      if (!response.ok) {
+        console.error(
+          "Error en la petición:",
+          response.status,
+          response.statusText
+        );
+        return;
+      }
+
+      console.log("zoneData", zoneData);
+      console.log("ID del primer elemento:", zoneData.respuesta[0].id);
+
+      let newPolygons = [];
+
+      for (let point of zoneData.respuesta) {
+        if (point.activo) {
+          fetch(`${BaseURL.apiUrl}/coordenadas/getCoordZonaSeg/${point.id}`)
+            .then((response) => response.json())
+            .then((data) => {
+              if (data.status) {
+                let polygonPoints = [];
+                for (let coord of data.respuesta) {
+                  polygonPoints.push([coord.latitud, coord.longitud]);
+                }
+                newPolygons.push(polygonPoints);
+              } else {
+                console.error("Error fetching coordinates:", data.mensaje);
+              }
+            })
+            .catch((error) => console.error("Error:", error));
+        }
+      }
+
+      setPolygons(newPolygons);
+    };
+
+    fetchZones();
+  }, [userAttacker.userName]);
 
   return (
     <div>

@@ -22,7 +22,7 @@ const LoginController = () => {
 
     try {
       const response = await fetch(
-        `${BaseURL.apiUrl}/users/authUser/${loginData.username}/${loginData.password}/1`,
+        `${BaseURL.apiUrl}/users/authUser/${loginData.username}/${loginData.password}`,
         {
           method: "GET",
         }

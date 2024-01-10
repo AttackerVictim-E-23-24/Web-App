@@ -3,14 +3,15 @@ import React, { useState, useContext } from "react";
 import MonitoringModel from "../Model/MonitoringModel";
 import MonitoringView from "../View/MonitoringView";
 import { BaseURL } from "./BaseURL";
-import GeneralContext from '../GeneralContext';
+import GeneralContext from "../GeneralContext";
 
 const MonitoringFormController = () => {
   const [monitoring, setMonitoring] = useState(new MonitoringModel());
-  const { setMonitoringData, userVictim, userAttacker } = useContext(GeneralContext); // Añade userVictim y userAttacker
+  const { setMonitoringData, userVictim, userAttacker } =
+    useContext(GeneralContext); // Añade userVictim y userAttacker
   const [responseMessage, setResponseMessage] = useState("");
   const [responseSuccess, setResponseSuccess] = useState(false);
-  
+
   const handleInputChange = (event) => {
     const { name, value } = event.target;
     setMonitoring({ ...monitoring, [name]: value });
@@ -20,7 +21,7 @@ const MonitoringFormController = () => {
     event.preventDefault();
 
     const response = await fetch(`${BaseURL.apiUrl}/monitoreo/setMonitoreo`, {
-      method: "POST",
+      method: "post",
       headers: {
         "Content-Type": "application/json",
       },
@@ -44,14 +45,20 @@ const MonitoringFormController = () => {
       setResponseSuccess(false);
       return;
     }
-    
+
     console.log("La petición fue exitosa");
     setResponseMessage("La petición fue exitosa");
     setResponseSuccess(true);
-    
+    const responseData = await response.json();
+    const newMonitoring = { ...monitoring, id: responseData.respuesta.id };
+    setMonitoring(newMonitoring);
     // Actualiza el estado monitoringData con los datos del monitoreo
-    setMonitoringData(monitoring);
-    
+    // Actualiza el estado monitoringData con los datos del monitoreo
+    setMonitoringData((prevMonitoringData) => ({
+      ...prevMonitoringData,
+      id: responseData.respuesta.id,
+    }));
+
     // Borra los inputs
     setMonitoring(new MonitoringModel());
   };

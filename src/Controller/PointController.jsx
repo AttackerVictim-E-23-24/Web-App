@@ -3,6 +3,7 @@ import axios from "axios";
 import { BaseURL } from "./BaseURL";
 import GeneralContext from "../GeneralContext";
 import PointView from "../View/PointView"; // Importa PointView
+import PointModel from "../Model/PointModel"; // Asegúrate de que la ruta sea correcta
 
 const PointController = ({ onMarkerClick }) => {
   const { userAttacker, userVictim } = useContext(GeneralContext);
@@ -33,9 +34,23 @@ const PointController = ({ onMarkerClick }) => {
           const victimResponse = await axios.get(
             `${BaseURL.apiUrl}/users/getGeolocation/${userVictim.userName}`
           );
+          console.log("attackerResponse", attackerResponse);
+          console.log("victimResponse", victimResponse);
   
-          if (attackerResponse.status === 200 && victimResponse.status === 200) {
-            setPoints([attackerResponse.data, victimResponse.data]);
+          if (
+            attackerResponse.status === 200 &&
+            victimResponse.status === 200
+          ) {
+            // Transformar los datos de la respuesta en objetos PointModel
+            const attackerPoint = {
+              lat: Number(attackerResponse.data.respuesta.latitud),
+              lng: Number(attackerResponse.data.respuesta.longitud),
+            };
+            const victimPoint = {
+              lat: Number(victimResponse.data.respuesta.latitud),
+              lng: Number(victimResponse.data.respuesta.longitud),
+            };
+            setPoints([attackerPoint, victimPoint]);
           } else {
             alert("Error fetching locations");
           }
@@ -49,11 +64,14 @@ const PointController = ({ onMarkerClick }) => {
     fetchLocations();
   }, [userAttacker, userVictim]);
 
-
   return (
     <div>
       <div className="mapContainer">
-          <PointView center={center} points={points} onMarkerClick={onMarkerClick} />
+        <PointView
+          center={center}
+          points={points}
+          onMarkerClick={onMarkerClick}
+        />
         <br />
       </div>
       <br />
