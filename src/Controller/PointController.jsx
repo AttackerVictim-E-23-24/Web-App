@@ -3,12 +3,12 @@ import axios from "axios";
 import { BaseURL } from "./BaseURL";
 import GeneralContext from "../GeneralContext";
 import PointView from "../View/PointView"; // Importa PointView
-import PointModel from "../Model/PointModel"; // Asegúrate de que la ruta sea correcta
 
 const PointController = ({ onMarkerClick }) => {
   const { userAttacker, userVictim } = useContext(GeneralContext);
   const [center, setCenter] = useState({ lat: -34.397, lng: 150.644 });
-  const [points, setPoints] = useState([]);
+  const [attackerPoints, setAttackerPoints] = useState([]);
+  const [victimPoints, setVictimPoints] = useState([]);
 
   useEffect(() => {
     navigator.geolocation.getCurrentPosition(
@@ -24,58 +24,75 @@ const PointController = ({ onMarkerClick }) => {
     );
   }, []);
 
+
   useEffect(() => {
-    const fetchLocations = async () => {
+    const fetchAttackerLocations = async () => {
       try {
-        if (userAttacker && userVictim) {
-          const attackerResponse = await axios.get(
-            `${BaseURL.apiUrl}/users/getGeolocation/${userAttacker.userName}`
+        if (userAttacker) {
+          const response = await axios.get(
+            `${BaseURL.apiUrl}/users/getGeolocationHistory/${userAttacker.userName}`
           );
-          const victimResponse = await axios.get(
-            `${BaseURL.apiUrl}/users/getGeolocation/${userVictim.userName}`
-          );
-          console.log("attackerResponse", attackerResponse);
-          console.log("victimResponse", victimResponse);
-  
-          if (
-            attackerResponse.status === 200 &&
-            victimResponse.status === 200
-          ) {
+          console.log("attackerResponse", response);
+    
+          if (response.status === 200) {
             // Transformar los datos de la respuesta en objetos PointModel
-            const attackerPoint = {
-              lat: Number(attackerResponse.data.respuesta.latitud),
-              lng: Number(attackerResponse.data.respuesta.longitud),
-            };
-            const victimPoint = {
-              lat: Number(victimResponse.data.respuesta.latitud),
-              lng: Number(victimResponse.data.respuesta.longitud),
-            };
-            setPoints([attackerPoint, victimPoint]);
+            const points = response.data.respuesta.map(location => ({
+              lat: Number(location.latitud),
+              lng: Number(location.longitud),
+            }));
+            setAttackerPoints(points);
           } else {
-            alert("Error fetching locations");
+            alert("Error fetching attacker locations");
           }
         }
       } catch (error) {
         console.error(error);
-        alert("Error fetching locations");
       }
     };
+    
+    const fetchVictimLocations = async () => {
+      try {
+        if (userVictim) {
+          const response = await axios.get(
+            `${BaseURL.apiUrl}/users/getGeolocationHistory/${userVictim.userName}`
+          );
+          console.log("victimResponse", response);
+    
+          if (response.status === 200) {
+            // Transformar los datos de la respuesta en objetos PointModel
+            const points = response.data.respuesta.map(location => ({
+              lat: Number(location.latitud),
+              lng: Number(location.longitud),
+            }));
+            setVictimPoints(points);
+          } else {
+            alert("Error fetching victim locations");
+          }
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    fetchAttackerLocations();
+    fetchVictimLocations();
+    const intervalId = setInterval(() => {
+      fetchAttackerLocations();
+      fetchVictimLocations();
+    }, 30 * 1000);
   
-    fetchLocations();
+    return () => clearInterval(intervalId);
   }, [userAttacker, userVictim]);
+  
 
   return (
-    <div>
       <div className="mapContainer">
         <PointView
           center={center}
-          points={points}
+          attackerPoints={attackerPoints}
+          victimPoints={victimPoints}
           onMarkerClick={onMarkerClick}
         />
-        <br />
       </div>
-      <br />
-    </div>
   );
 };
 

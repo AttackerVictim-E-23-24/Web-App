@@ -162,7 +162,7 @@ const PolygonController = () => {
         `${BaseURL.apiUrl}/zonasSeg/getAllByUsername/${userAttacker.userName}`
       );
       const zoneData = await response.json();
-
+  
       if (!response.ok) {
         console.error(
           "Error en la petición:",
@@ -171,34 +171,40 @@ const PolygonController = () => {
         );
         return;
       }
-
+  
       console.log("zoneData", zoneData);
-      console.log("ID del primer elemento:", zoneData.respuesta[0].id);
-
+      console.log("ID del primer elemento:", zoneData.respuesta[0]?.id);
+  
       let newPolygons = [];
-
+  
       for (let point of zoneData.respuesta) {
         if (point.activo) {
-          fetch(`${BaseURL.apiUrl}/coordenadas/getCoordZonaSeg/${point.id}`)
-            .then((response) => response.json())
-            .then((data) => {
-              if (data.status) {
-                let polygonPoints = [];
-                for (let coord of data.respuesta) {
-                  polygonPoints.push([coord.latitud, coord.longitud]);
-                }
-                newPolygons.push(polygonPoints);
-              } else {
-                console.error("Error fetching coordinates:", data.mensaje);
-              }
-            })
-            .catch((error) => console.error("Error:", error));
+          const response = await fetch(`${BaseURL.apiUrl}/coordenadas/getCoordZonaSeg/${point.id}`);
+          const data = await response.json();
+  
+          if (data.status) {
+            const newPolygon = new PolygonModel();
+            for (let coord of data.respuesta) {
+              const pointModel = new PointModel(coord.latitud, coord.longitud);
+              newPolygon.addPoint(pointModel);
+            }
+  
+            // Convert newPolygon to an array of { lat, lng } objects
+            const newPolygonPoints = newPolygon.getPoints().map((pointModel) => ({
+              lat: pointModel.latitude,
+              lng: pointModel.longitude,
+            }));
+  
+            newPolygons.push(newPolygonPoints);
+          } else {
+            console.error("Error fetching coordinates:", data.mensaje);
+          }
         }
       }
-
+  
       setPolygons(newPolygons);
     };
-
+  
     fetchZones();
   }, [userAttacker.userName]);
 

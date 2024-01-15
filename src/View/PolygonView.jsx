@@ -8,6 +8,7 @@ import {
   Polyline,
 } from "@react-google-maps/api";
 import "../Pages/css/MapView.css";
+import { API_KEY } from "../Controller/API_KEY"; // Asegúrate de que la ruta sea correcta
 
 const PolygonView = ({
   center,
@@ -28,7 +29,7 @@ const PolygonView = ({
   return (
     <div>
       <div className="mapContainer">
-        <LoadScript googleMapsApiKey="AIzaSyCccZNiLlQVuUUN__qwtUC5GdpJveXQ1s8">
+        <LoadScript googleMapsApiKey={API_KEY.key}>
           <GoogleMap
             mapContainerStyle={mapStyles}
             zoom={14}
