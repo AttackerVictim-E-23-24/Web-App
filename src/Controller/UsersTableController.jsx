@@ -14,7 +14,7 @@ function UsersTableController() {
   const [searchName, setSearchName] = useState("");
   const [filtersActive, setFiltersActive] = useState(false);
   const [filteredUsers, setFilteredUsers] = useState([]);
-  const { setMonitoringData, setUserAttacker, setUserVictim } =
+  const { setMonitoringData, setUserAttacker, setUserVictim, monitoringData, userVictim, userAttacker } =
     useContext(GeneralContext);
   // 1. Agrega un nuevo estado para almacenar el valor de búsqueda de la cédula.
   const [searchCedula, setSearchCedula] = useState("");
@@ -39,7 +39,6 @@ function UsersTableController() {
     }
   };
 
-  
   const filterUsers = useCallback(() => {
     if (filtersActive) {
       return users.getUsers().filter((user) => {
@@ -140,9 +139,13 @@ function UsersTableController() {
         null // registrationDate no está en la respuesta
       );
 
+      console.log("monitoringModel", monitoringData);
+      console.log("attackerModel", userAttacker);
+      console.log("victimModel", userVictim);
       setMonitoringData(monitoringModel);
       setUserAttacker(attackerModel);
       setUserVictim(victimModel);
+      
 
       // Redirige al usuario a /follow-up
       navigate("/follow-up");

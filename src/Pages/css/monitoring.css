@@ -2,11 +2,28 @@ h1 {
   text-align: center; /* Centra el texto horizontalmente */
   margin: 0 auto; /* Centra el bloque verticalmente */
 }
+
+h2 {
+  text-align: left; /* Centra el texto horizontalmente */
+  margin: 0 10px 0 auto; /* Centra el bloque verticalmente */
+}
 /* monitoring.css */
 .card {
   border-radius: 15px;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
   border-color: #007bff;
+}
+
+.myButton {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 10px;
+  width: 300px;
+}
+
+.filled {
+  background-color: green; /* o cualquier color que quieras para el botón lleno */
 }
 
 .page {
@@ -36,7 +53,6 @@ h1 {
   padding: 10px; /* Añade padding alrededor del contenido */
   background-color: #ffffff; /* Añade un color de fondo */
 }
-
 
 .sidebar {
   width: 250px; /* Ajusta el ancho de la barra lateral según lo necesites */

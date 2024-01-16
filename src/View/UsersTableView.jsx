@@ -37,7 +37,7 @@ function UsersTableView({ users, handleInputChange, handleSubmit }) {
                         onSubmit={(e) => handleSubmit(e, user.getUserName())}
                       >
                         <td className="">
-                          <button type="submit">👤</button>
+                          <button type="submit">🎯</button>
                         </td>
                         <td className="column-full-name">
                           <span>{user.getFullName()}</span>

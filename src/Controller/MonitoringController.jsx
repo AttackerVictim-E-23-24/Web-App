@@ -1,5 +1,5 @@
 // MonitoringFormController.jsx
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import MonitoringModel from "../Model/MonitoringModel";
 import MonitoringView from "../View/MonitoringView";
 import { BaseURL } from "./BaseURL";
@@ -7,7 +7,7 @@ import GeneralContext from "../GeneralContext";
 
 const MonitoringFormController = () => {
   const [monitoring, setMonitoring] = useState(new MonitoringModel());
-  const { setMonitoringData, userVictim, userAttacker } =
+  const { setMonitoringData, userVictim, userAttacker, monitoringData } =
     useContext(GeneralContext); // Añade userVictim y userAttacker
   const [responseMessage, setResponseMessage] = useState("");
   const [responseSuccess, setResponseSuccess] = useState(false);
@@ -19,22 +19,37 @@ const MonitoringFormController = () => {
 
   const submitForm = async (event) => {
     event.preventDefault();
+  
+    const url = monitoring.id
+      ? `${BaseURL.apiUrl}/monitoreo/putMonitoreo/${userVictim.userName}`
+      : `${BaseURL.apiUrl}/monitoreo/setMonitoreo`;
+  
+    const method = monitoring.id ? "put" : "post";
+  
+    const data = monitoring.id
+      ? {
+          frecuencia: monitoring.frequency,
+          tiempoInactividad: monitoring.downtime,
+          tiempoOffline: monitoring.offlineTime,
+          distanciaAlejamiento: monitoring.minDistance,
+        }
+      : {
+          frecuencia: monitoring.frequency,
+          tiempoInactividad: monitoring.downtime,
+          tiempoOffline: monitoring.offlineTime,
+          distanciaAlejamiento: monitoring.minDistance,
+          cedulaAtacante: userAttacker.cedula,
+          cedulaVictima: userVictim.cedula,
+        };
 
-    const response = await fetch(`${BaseURL.apiUrl}/monitoreo/setMonitoreo`, {
-      method: "post",
+    const response = await fetch(url, {
+      method: method,
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({
-        frecuencia: monitoring.frequency,
-        tiempoInactividad: monitoring.downtime,
-        tiempoOffline: monitoring.offlineTime,
-        distanciaAlejamiento: monitoring.minDistance,
-        cedulaAtacante: userAttacker.cedula, // Usa userAttacker.cedula
-        cedulaVictima: userVictim.cedula, // Usa userVictim.cedula
-      }),
+      body: JSON.stringify(data),
     });
-
+  
     if (!response.ok) {
       console.error(
         "Error en la petición:",
@@ -45,28 +60,73 @@ const MonitoringFormController = () => {
       setResponseSuccess(false);
       return;
     }
-
+  
     console.log("La petición fue exitosa");
     setResponseMessage("La petición fue exitosa");
     setResponseSuccess(true);
     const responseData = await response.json();
-    const newMonitoring = { ...monitoring, id: responseData.respuesta.id };
-    setMonitoring(newMonitoring);
-    // Actualiza el estado monitoringData con los datos del monitoreo
+  
+    // Inicia el monitoreo con los datos de la respuesta
+    setMonitoring(responseData.respuesta);
+  
     // Actualiza el estado monitoringData con los datos del monitoreo
     setMonitoringData((prevMonitoringData) => ({
       ...prevMonitoringData,
       id: responseData.respuesta.id,
     }));
-
+  
     // Borra los inputs
     setMonitoring(new MonitoringModel());
   };
 
+  useEffect(() => {
+    if (monitoringData) {
+      setMonitoring(monitoringData);
+    }
+  }, [monitoringData]);
+
+  const handleDelete = async () => {
+    const url = `${BaseURL.apiUrl}/monitoreo/deleteMonitoreo/${userAttacker.userName}`;
+  
+    const response = await fetch(url, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+  
+    const responseData = await response.json();
+  
+    if (!response.ok || !responseData.respuesta) {
+      console.error(
+        "Error en la petición:",
+        response.status,
+        response.statusText
+      );
+      setResponseMessage("Error en la petición");
+      setResponseSuccess(false);
+      return;
+    }
+  
+    console.log("La petición fue exitosa");
+    setResponseMessage(responseData.mensaje);
+    setResponseSuccess(true);
+  
+    // Actualiza el estado monitoringData con los datos del monitoreo
+    setMonitoringData((prevMonitoringData) => ({
+      ...prevMonitoringData,
+      id: null,
+    }));
+  
+    // Borra los inputs
+    setMonitoring(new MonitoringModel());
+  };
   return (
     <MonitoringView
+      monitoring={monitoring}
       handleInputChange={handleInputChange}
       handleSubmit={submitForm}
+      handleDelete={handleDelete}
       responseMessage={responseMessage}
       responseSuccess={responseSuccess}
     />

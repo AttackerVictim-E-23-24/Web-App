@@ -1,82 +1,127 @@
 // MonitoringPage.jsx
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import UserController from "../Controller/UserController";
 import MonitoringController from "../Controller/MonitoringController";
 import "../Pages/css/monitoring.css";
+import UserModel from "../Model/UserModel";
+import MonitoringModel from "../Model/MonitoringModel";
+import GeneralContext from "../GeneralContext";
 
 const MonitoringPage = () => {
-  const [content, setContent] = useState(null);
-  const [victimPrintable, setVictimPrintable] = useState(localStorage.getItem('victimDataSent') !== 'true');
-  const [attackerPrintable, setAttackerPrintable] = useState(localStorage.getItem('attackerDataSent') !== 'true');
-  const [currentView, setCurrentView] = useState('victim');
+  const views = ["victim", "attacker", "monitoring"];
+  const [victimPrintable, setVictimPrintable] = useState(
+    localStorage.getItem("victimDataSent") !== "true"
+  );
+  const [attackerPrintable, setAttackerPrintable] = useState(
+    localStorage.getItem("attackerDataSent") !== "true"
+  );
+  const [currentView, setCurrentView] = useState("victim");
+  const { userVictim, userAttacker, monitoringData, setUserVictim, setUserAttacker, setMonitoringData } =
+    useContext(GeneralContext);
 
   const resetData = () => {
-    localStorage.removeItem('attackerDataSent');
-    localStorage.removeItem('victimDataSent');
+    localStorage.removeItem("attackerDataSent");
+    localStorage.removeItem("victimDataSent");
     setAttackerPrintable(true);
     setVictimPrintable(true);
-    setCurrentView('victim');
+    setCurrentView("victim");
+    setUserVictim(new UserModel());
+    setUserAttacker(new UserModel());
+    setMonitoringData(new MonitoringModel());
   };
 
   useEffect(() => {
     if (victimPrintable) {
-      setCurrentView('victim');
+      setCurrentView("victim");
     } else if (attackerPrintable) {
-      setCurrentView('attacker');
+      setCurrentView("attacker");
     } else {
-      setCurrentView('monitoring');
+      setCurrentView("monitoring");
     }
   }, [victimPrintable, attackerPrintable]);
-
-  useEffect(() => {
-    if (currentView === 'victim') {
-      setContent(
-        <div>
-          <h2>Registrar Victima</h2>
-          <hr />
-          <UserController
-            role="victima"
-            setVictimPrintable={(value) => {
-              setVictimPrintable(value);
-              localStorage.setItem('victimDataSent', !value);
-            }}
-          />
-        </div>
-      );
-    } else if (currentView === 'attacker') {
-      setContent(
-        <div>
-          <h2>Registrar Agresor</h2>
-          <hr />
-          <UserController
-            role="agresor"
-            setAttackerPrintable={(value) => {
-              setAttackerPrintable(value);
-              localStorage.setItem('attackerDataSent', !value);
-            }}
-          />
-        </div>
-      );
-    } else {
-      setContent(
-        <div>
-          <h2>Registrar Monitoreo</h2>
-          <hr />
-          <MonitoringController />
-        </div>
-      );
-    }
-  }, [currentView]);
 
   return (
     <div className="main-container">
       <div className="content">
         <div className="controller-container">
-          <h1>Datos de Monitoreo</h1>
+          <h1>Monitoreo</h1>
+          <hr />
           <br />
-          {content}
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              gap: "10px",
+            }}
+          >
+            <button
+              onClick={() =>
+                setCurrentView(
+                  views[Math.max(0, views.indexOf(currentView) - 1)]
+                )
+              }
+            >
+              &lt;
+            </button>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                gap: "10px",
+              }}
+            >
+              <button
+                className={`myButton ${
+                  currentView === "victim" ? "selected" : ""
+                } ${userVictim?.userName ? "filled" : ""}`}
+                onClick={() => setCurrentView("victim")}
+              >
+                Registrar Victima
+              </button>
+              <button
+                className={`myButton ${
+                  currentView === "attacker" ? "selected" : ""
+                } ${userAttacker?.userName ? "filled" : ""}`}
+                onClick={() => setCurrentView("attacker")}
+              >
+                Registrar Agresor
+              </button>
+              <button
+                className={`myButton ${
+                  currentView === "monitoring" ? "selected" : ""
+                } ${monitoringData?.frequency ? "filled" : ""}`}
+                onClick={() => setCurrentView("monitoring")}
+              >
+                Registrar Monitoreo
+              </button>
+            </div>
+            <button
+              onClick={() =>
+                setCurrentView(
+                  views[
+                    Math.min(views.length - 1, views.indexOf(currentView) + 1)
+                  ]
+                )
+              }
+            >
+              &gt;
+            </button>
+          </div>
+
+          <div className={`fade ${currentView}`}>
+            {currentView === "victim" && <UserController role="victima" setVictimPrintable={setVictimPrintable} />}
+            {currentView === "attacker" && <UserController role="agresor" setAttackerPrintable={setAttackerPrintable} />}
+            {currentView === "monitoring" && <MonitoringController />}
+          </div>
         </div>
-          <button style={{marginLeft:"20px",marginBlockEnd:'20px', width: '100px' }} onClick={resetData}>Nuevo</button>
+        <br />
+        <button
+          style={{ marginLeft: "20px", marginBlockEnd: "20px", width: "100px" }}
+          onClick={resetData}
+        >
+          Nuevo
+        </button>
       </div>
       <br />
     </div>
