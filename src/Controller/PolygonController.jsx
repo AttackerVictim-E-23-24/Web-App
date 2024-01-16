@@ -15,6 +15,9 @@ const PolygonController = () => {
   const [center, setCenter] = useState({ lat: 40.7128, lng: -74.006 }); // New state for center
   const { monitoringData, setMonitoringData, userAttacker, userVictim } =
     useContext(GeneralContext);
+    
+  const [displayedPolygons, setDisplayedPolygons] = useState([]); // Nueva variable de estado
+
 
   useEffect(() => {
     navigator.geolocation.getCurrentPosition(
@@ -58,6 +61,7 @@ const PolygonController = () => {
     }));
     console.log("newPolygonPoints", newPolygonPoints);
     setPolygons((prevPolygons) => [...prevPolygons, newPolygonPoints]);
+    setDisplayedPolygons((prevPolygons) => [...prevPolygons, newPolygonPoints]); // Actualizar displayedPolygons
     setManualPoints([]);
     console.log("polygons", polygons);
   };
@@ -140,7 +144,7 @@ const PolygonController = () => {
           longitud: point.lng,
           createdAt: monitoringData.startDate,
           zonaSegDto: {
-            id: monitoringData.id,
+            id: id,
           },
         }))
       );
@@ -150,11 +154,16 @@ const PolygonController = () => {
       if (!geoData.error) {
         console.log(geoData);
         setPolygons([]); // Reinicia los puntos de la zona de seguridad
+        setDisplayedPolygons([]); // Reinicia los polígonos mostrados
+      console.log("polygons after sending data:", polygons); // Imprime los datos de polygons después de enviar
       } else {
         console.error("Error al enviar los datos geográficos:", geoData.error);
       }
     }
   };
+  useEffect(() => {
+    console.log("polygons after sending data:", polygons);
+  }, [polygons]);
 
   useEffect(() => {
     const fetchZones = async () => {
@@ -162,7 +171,7 @@ const PolygonController = () => {
         `${BaseURL.apiUrl}/zonasSeg/getAllByUsername/${userAttacker.userName}`
       );
       const zoneData = await response.json();
-  
+    
       if (!response.ok) {
         console.error(
           "Error en la petición:",
@@ -171,48 +180,59 @@ const PolygonController = () => {
         );
         return;
       }
-  
+    
       console.log("zoneData", zoneData);
       console.log("ID del primer elemento:", zoneData.respuesta[0]?.id);
-  
+    
       let newPolygons = [];
-  
+    
       for (let point of zoneData.respuesta) {
+        console.log("point iteration id", point.id);  
         if (point.activo) {
-          const response = await fetch(`${BaseURL.apiUrl}/coordenadas/getCoordZonaSeg/${point.id}`);
+          const response = await fetch(
+            `${BaseURL.apiUrl}/coordenadas/getCoordZonaSeg/${point.id}`
+          );
           const data = await response.json();
-  
+    
           if (data.status) {
             const newPolygon = new PolygonModel();
             for (let coord of data.respuesta) {
               const pointModel = new PointModel(coord.latitud, coord.longitud);
               newPolygon.addPoint(pointModel);
+              console.log("pointModel", pointModel);
             }
-  
+    
             // Convert newPolygon to an array of { lat, lng } objects
-            const newPolygonPoints = newPolygon.getPoints().map((pointModel) => ({
-              lat: pointModel.latitude,
-              lng: pointModel.longitude,
-            }));
-  
+            const newPolygonPoints = newPolygon
+              .getPoints()
+              .map((pointModel) => ({
+                lat: pointModel.latitude,
+                lng: pointModel.longitude,
+              }));
+    
             newPolygons.push(newPolygonPoints);
           } else {
             console.error("Error fetching coordinates:", data.mensaje);
           }
         }
       }
-  
-      setPolygons(newPolygons);
+    
+      return newPolygons; // Retornar los nuevos polígonos
     };
-  
-    fetchZones();
+    
+    // Luego, puedes usar fetchZones de la siguiente manera:
+    
+    fetchZones().then(newPolygons => {
+      setDisplayedPolygons((prevPolygons) => [...prevPolygons, ...newPolygons]); // Actualizar displayedPolygons
+    });
+    
   }, [userAttacker.userName]);
 
   return (
     <div>
       <PolygonView
         center={center} // You can change this to your preferred center
-        polygons={polygons}
+        polygons={displayedPolygons}
         onMapClick={handleMapClick}
         onPolygonClick={handlePolygonClick}
         infoWindow={infoWindow}
