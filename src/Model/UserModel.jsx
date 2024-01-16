@@ -1,6 +1,6 @@
 // User.js
 class UserModel {
-    constructor(firstName, secondName, lastName, secondLastName, birthDate, cedula, userName, password, email, role, imei,userTypeDto,direccion, registrationDate) {
+    constructor(id, firstName, secondName, lastName, secondLastName, birthDate, cedula, userName, password, email, role, imei,userTypeDto,direccion, registrationDate) {
       this.firstName = firstName;
       this.secondName = secondName;
       this.lastName = lastName;
@@ -15,6 +15,7 @@ class UserModel {
       this.userTypeDto = userTypeDto;
       this.direccion = direccion;
       this.registrationDate = registrationDate;
+      this.id = id;
     }
     
     getFullName() {

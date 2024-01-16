@@ -9,7 +9,7 @@ function UserView({
   responseMessage,
   responseSuccess,
 }) {
-  const roleLabel = user.role === 'victima' ? 'de la víctima' : 'del agresor';
+  const roleLabel = user.role === "victima" ? "de la víctima" : "del agresor";
   return (
     <div>
       <form id="userForm" method="POST" onSubmit={handleSubmit}>
@@ -86,9 +86,7 @@ function UserView({
           </div>
           <div className="row">
             <div className={`field field-${user.role}`}>
-              <label htmlFor="userName">
-                Nombre de usuario {roleLabel}
-              </label>
+              <label htmlFor="userName">Nombre de usuario {roleLabel}</label>
               <input
                 id="userName"
                 name="userName"
@@ -99,9 +97,7 @@ function UserView({
               />
             </div>
             <div className={`field field-${user.role}`}>
-              <label htmlFor="password">
-                Nombre de usuario {roleLabel}
-              </label>
+              <label htmlFor="password">Nombre de usuario {roleLabel}</label>
               <input
                 id="password"
                 name="password"
@@ -115,19 +111,7 @@ function UserView({
           </div>
           <div className="row">
             <div className={`field field-${user.role}`}>
-              <label htmlFor="imei">IMEI {roleLabel}</label>
-              <input
-                id="imei"
-                name="imei"
-                onChange={handleInputChange}
-                placeholder="123456789012345"
-                required
-              />
-            </div>
-            <div className={`field field-${user.role}`}>
-              <label htmlFor="birthDate">
-                Fecha de nacimiento {roleLabel}
-              </label>
+              <label htmlFor="birthDate">Fecha de nacimiento {roleLabel}</label>
               <input
                 id="birthDate"
                 name="birthDate"
@@ -135,20 +119,18 @@ function UserView({
                 onChange={handleInputChange}
                 required
               />
-            </div>
-          </div>
-          <div className="">
-            <div className={`field field-${user.role}`}>
-              <label htmlFor="address">
-                Direccion de domicilio {roleLabel}
-              </label>
-              <input
-                id="address"
-                name="address"
-                onChange={handleInputChange}
-                placeholder="Av/calle/casa abcd 1234"
-                required
-              />
+              </div>
+              <div className={`field field-${user.role}`}>
+                <label htmlFor="address">
+                  Direccion de domicilio {roleLabel}
+                </label>
+                <input
+                  id="address"
+                  name="address"
+                  onChange={handleInputChange}
+                  placeholder="Av/calle/casa abcd 1234"
+                  required
+                />
             </div>
           </div>
         </div>

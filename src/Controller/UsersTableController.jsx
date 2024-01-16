@@ -12,44 +12,48 @@ function UsersTableController() {
   const navigate = useNavigate();
   const [users, setUsers] = useState(new UsersTableModel());
   const [searchName, setSearchName] = useState("");
-  const [searchCedula, setSearchCedula] = useState("");
   const [filtersActive, setFiltersActive] = useState(false);
   const [filteredUsers, setFilteredUsers] = useState([]);
   const { setMonitoringData, setUserAttacker, setUserVictim } =
     useContext(GeneralContext);
+  // 1. Agrega un nuevo estado para almacenar el valor de búsqueda de la cédula.
+  const [searchCedula, setSearchCedula] = useState("");
 
   const handleNameSearchChange = (event) => {
     setSearchName(event.target.value);
-    setFiltersActive(event.target.value !== "" || searchCedula !== "");
+    if (event.target.value === "") {
+      setFiltersActive(false);
+      setFilteredUsers(users.getUsers());
+    } else {
+      setFiltersActive(true);
+    }
   };
 
   const handleCedulaSearchChange = (event) => {
     setSearchCedula(event.target.value);
-    setFiltersActive(event.target.value !== "" || searchName !== "");
+    if (event.target.value === "") {
+      setFiltersActive(false);
+      setFilteredUsers(users.getUsers());
+    } else {
+      setFiltersActive(true);
+    }
   };
 
+  
   const filterUsers = useCallback(() => {
     if (filtersActive) {
       return users.getUsers().filter((user) => {
-        if (user.datosPersona && user.datosPersona.cedula != null) {
-          // Caso 1: Ambos campos están llenos
-          if (searchCedula && searchName) {
-            return (
-              user.datosPersona.cedula.toString().includes(searchCedula) &&
-              user.datosPersona.name
-                .toLowerCase()
-                .includes(searchName.toLowerCase())
-            );
-          }
-          // Caso 2: Solo el campo de cédula está lleno
-          else if (searchCedula) {
-            return user.datosPersona.cedula.toString().includes(searchCedula);
-          }
-          // Caso 3: Solo el campo de nombre está lleno
-          else if (searchName) {
-            return user.datosPersona.name
+        if (user) {
+          // Solo el campo de nombre está lleno
+          if (searchName) {
+            return user
+              .getFullName()
               .toLowerCase()
               .includes(searchName.toLowerCase());
+          }
+          // Solo el campo de cédula está lleno
+          if (searchCedula) {
+            return String(user.getCedula()).includes(searchCedula);
           }
         }
         return false;
@@ -57,12 +61,12 @@ function UsersTableController() {
     } else {
       return users.getUsers();
     }
-  }, [searchCedula, searchName, filtersActive, users]);
+  }, [searchName, searchCedula, filtersActive, users]); // Agrega searchCedula aquí
 
   const handleResetSearch = () => {
     setSearchName("");
-    setSearchCedula("");
     setFiltersActive(false);
+    setFilteredUsers(users.getUsers()); // Add this line
   };
 
   const handleInputChange = (event, userId) => {
@@ -97,10 +101,11 @@ function UsersTableController() {
         data.tiempoOffline,
         data.distanciaAlejamiento,
         null, // record no está en la respuesta
-        null  // endDate no está en la respuesta
+        null // endDate no está en la respuesta
       );
-      
+
       const attackerModel = new UserModel(
+        data.atacanteUser.id, // Agrega el id aquí
         data.atacanteUser.datosPersona.nombre,
         data.atacanteUser.datosPersona.seg_nombre,
         data.atacanteUser.datosPersona.apellido,
@@ -116,8 +121,9 @@ function UsersTableController() {
         data.atacanteUser.datosPersona.direccion,
         null // registrationDate no está en la respuesta
       );
-      
+
       const victimModel = new UserModel(
+        data.victimaUser.id, // Agrega el id aquí
         data.victimaUser.datosPersona.nombre,
         data.victimaUser.datosPersona.seg_nombre,
         data.victimaUser.datosPersona.apellido,
@@ -159,6 +165,7 @@ function UsersTableController() {
       const users = data.respuesta.map(
         (user) =>
           new UserModel(
+            user.id, // Agrega el id aquí
             user.datosPersona.nombre,
             user.datosPersona.seg_nombre,
             user.datosPersona.apellido,
@@ -284,9 +291,9 @@ function UsersTableController() {
             placeholder="Buscar por nombre"
             style={{ padding: "5px", borderRadius: "5px" }}
           />
-          <span>Cedula:</span>
+          <span>Cédula:</span>
           <input
-            type="number"
+            type="text"
             value={searchCedula}
             onChange={handleCedulaSearchChange}
             placeholder="Buscar por cédula"

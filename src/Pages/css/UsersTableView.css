@@ -37,13 +37,16 @@
   display: flex;
   justify-content: space-between;
 }
+table {
+  table-layout: auto;
+}
 
 .table-container td .row-container .column-full-name{
-  width: 200px; /* Ajusta esto al ancho que desees */
+  width: 300px; /* Ajusta esto al ancho que desees */
 }
 
 .table-container td .row-container .column-cedula {
-  width: 110px; /* Ajusta esto al ancho que desees */
+  width: 200px; /* Ajusta esto al ancho que desees */
 }
 
 .table-container td .row-container .column-age {

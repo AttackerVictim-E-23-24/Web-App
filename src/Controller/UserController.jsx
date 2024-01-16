@@ -48,7 +48,7 @@ function UserController({ role, setAttackerPrintable, setVictimPrintable }) {
   
     const requestBody = {
       userName: user.userName,
-      imei: user.imei,
+      imei: "token",
       password: user.password,
       userTypeDto,
       email: user.email,
