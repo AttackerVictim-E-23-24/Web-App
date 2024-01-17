@@ -11,6 +11,8 @@ const MonitoringFormController = () => {
     useContext(GeneralContext); // Añade userVictim y userAttacker
   const [responseMessage, setResponseMessage] = useState("");
   const [responseSuccess, setResponseSuccess] = useState(false);
+  // Add isEditing state
+  const [isEditing, setIsEditing] = useState(false);
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
@@ -19,14 +21,14 @@ const MonitoringFormController = () => {
 
   const submitForm = async (event) => {
     event.preventDefault();
-  
-    const url = monitoring.id
+
+    const url = isEditing
       ? `${BaseURL.apiUrl}/monitoreo/putMonitoreo/${userVictim.userName}`
       : `${BaseURL.apiUrl}/monitoreo/setMonitoreo`;
-  
-    const method = monitoring.id ? "put" : "post";
-  
-    const data = monitoring.id
+
+    const method = isEditing ? "put" : "post";
+
+    const data = isEditing
       ? {
           frecuencia: monitoring.frequency,
           tiempoInactividad: monitoring.downtime,
@@ -49,7 +51,7 @@ const MonitoringFormController = () => {
       },
       body: JSON.stringify(data),
     });
-  
+
     if (!response.ok) {
       console.error(
         "Error en la petición:",
@@ -60,21 +62,30 @@ const MonitoringFormController = () => {
       setResponseSuccess(false);
       return;
     }
-  
+
     console.log("La petición fue exitosa");
     setResponseMessage("La petición fue exitosa");
     setResponseSuccess(true);
     const responseData = await response.json();
-  
+
     // Inicia el monitoreo con los datos de la respuesta
-    setMonitoring(responseData.respuesta);
-  
+    setMonitoring({
+      frequency: responseData.respuesta.frecuencia,
+      downtime: responseData.respuesta.tiempoInactividad,
+      offlineTime: responseData.respuesta.tiempoOffline,
+      minDistance: responseData.respuesta.distanciaAlejamiento,
+    });
+
     // Actualiza el estado monitoringData con los datos del monitoreo
     setMonitoringData((prevMonitoringData) => ({
       ...prevMonitoringData,
       id: responseData.respuesta.id,
+      frequency: responseData.respuesta.frecuencia,
+      downtime: responseData.respuesta.tiempoInactividad,
+      offlineTime: responseData.respuesta.tiempoOffline,
+      minDistance: responseData.respuesta.distanciaAlejamiento,
     }));
-  
+
     // Borra los inputs
     setMonitoring(new MonitoringModel());
   };
@@ -82,21 +93,24 @@ const MonitoringFormController = () => {
   useEffect(() => {
     if (monitoringData) {
       setMonitoring(monitoringData);
+      setIsEditing(true); // Set isEditing to true if monitoringData exists
+    } else {
+      setIsEditing(false); // Set isEditing to false if monitoringData does not exist
     }
   }, [monitoringData]);
 
   const handleDelete = async () => {
     const url = `${BaseURL.apiUrl}/monitoreo/deleteMonitoreo/${userAttacker.userName}`;
-  
+
     const response = await fetch(url, {
-      method: 'DELETE',
+      method: "DELETE",
       headers: {
-        'Content-Type': 'application/json'
-      }
+        "Content-Type": "application/json",
+      },
     });
-  
+
     const responseData = await response.json();
-  
+
     if (!response.ok || !responseData.respuesta) {
       console.error(
         "Error en la petición:",
@@ -107,17 +121,17 @@ const MonitoringFormController = () => {
       setResponseSuccess(false);
       return;
     }
-  
+
     console.log("La petición fue exitosa");
     setResponseMessage(responseData.mensaje);
     setResponseSuccess(true);
-  
+
     // Actualiza el estado monitoringData con los datos del monitoreo
     setMonitoringData((prevMonitoringData) => ({
       ...prevMonitoringData,
       id: null,
     }));
-  
+
     // Borra los inputs
     setMonitoring(new MonitoringModel());
   };

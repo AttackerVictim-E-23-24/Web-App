@@ -52,7 +52,7 @@ function UserController({ role, setAttackerPrintable, setVictimPrintable }) {
       seg_apellido: user.secondLastName,
       cedula: user.cedula,
       fch_nac: formattedBirthDate,
-      direccion: user.address,
+      direccion: user.direccion,
     };
   
     const requestBody = {
@@ -63,6 +63,7 @@ function UserController({ role, setAttackerPrintable, setVictimPrintable }) {
       email: user.email,
       datosPersona,
     };
+    console.log("requestBody", requestBody);
   
     const url = user.id
       ? `${BaseURL.apiUrl}/users/putUser/${user.userName}`
@@ -75,9 +76,10 @@ function UserController({ role, setAttackerPrintable, setVictimPrintable }) {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(user.userName ? datosPersona : requestBody),
+      body: JSON.stringify(user.id ? datosPersona : requestBody),
     });
   
+    console.log("send", user.id ? datosPersona : requestBody);  
     if (!response.ok) {
       const errorMessage = `Error en la petición: ${response.status}, ${response.statusText}`;
       console.error(errorMessage);
@@ -102,23 +104,23 @@ function UserController({ role, setAttackerPrintable, setVictimPrintable }) {
             secondLastName: data.respuesta.seg_apellido,
             cedula: data.respuesta.cedula,
             birthDate: data.respuesta.fch_nac,
-            address: data.respuesta.direccion,
+            direccion: data.respuesta.direccion,
           });
         } else if (method === "POST") {
           setUserVictim({
-            id: data.respuesta.id,
-            userName: data.respuesta.userName,
-            imei: data.respuesta.imei,
-            password: data.respuesta.password,
-            email: data.respuesta.email,
-            firstName: data.respuesta.datosPersona.nombre,
-            secondName: data.respuesta.datosPersona.seg_nombre,
-            lastName: data.respuesta.datosPersona.apellido,
-            secondLastName: data.respuesta.datosPersona.seg_apellido,
-            cedula: data.respuesta.datosPersona.cedula,
-            birthDate: data.respuesta.datosPersona.fch_nac,
-            address: data.respuesta.datosPersona.direccion,
-            userTypeDto: data.respuesta.userTypeDto,
+            id: data.id,
+            userName: data.userName,
+            imei: data.imei,
+            password: data.password,
+            email: data.email,
+            firstName: data.datosPersona.nombre,
+            secondName: data.datosPersona.seg_nombre,
+            lastName: data.datosPersona.apellido,
+            secondLastName: data.datosPersona.seg_apellido,
+            cedula: data.datosPersona.cedula,
+            birthDate: data.datosPersona.fch_nac,
+            direccion: data.datosPersona.direccion,
+            userTypeDto: data.userTypeDto,
           });
         }
         setVictimPrintable(false);
@@ -132,23 +134,23 @@ function UserController({ role, setAttackerPrintable, setVictimPrintable }) {
             secondLastName: data.respuesta.seg_apellido,
             cedula: data.respuesta.cedula,
             birthDate: data.respuesta.fch_nac,
-            address: data.respuesta.direccion,
+            direccion: data.respuesta.direccion,
           });
         } else if (method === "POST") {
           setUserAttacker({
-            id: data.respuesta.id,
-            userName: data.respuesta.userName,
-            imei: data.respuesta.imei,
-            password: data.respuesta.password,
-            email: data.respuesta.email,
-            firstName: data.respuesta.datosPersona.nombre,
-            secondName: data.respuesta.datosPersona.seg_nombre,
-            lastName: data.respuesta.datosPersona.apellido,
-            secondLastName: data.respuesta.datosPersona.seg_apellido,
-            cedula: data.respuesta.datosPersona.cedula,
-            birthDate: data.respuesta.datosPersona.fch_nac,
-            address: data.respuesta.datosPersona.direccion,
-            userTypeDto: data.respuesta.userTypeDto,
+            id: data.id,
+            userName: data.userName,
+            imei: data.imei,
+            password: data.password,
+            email: data.email,
+            firstName: data.datosPersona.nombre,
+            secondName: data.datosPersona.seg_nombre,
+            lastName: data.datosPersona.apellido,
+            secondLastName: data.datosPersona.seg_apellido,
+            cedula: data.datosPersona.cedula,
+            birthDate: data.datosPersona.fch_nac,
+            direccion: data.datosPersona.direccion,
+            userTypeDto: data.userTypeDto,
           });
         }
         setAttackerPrintable(false);

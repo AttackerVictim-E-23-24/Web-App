@@ -14,8 +14,14 @@ function UsersTableController() {
   const [searchName, setSearchName] = useState("");
   const [filtersActive, setFiltersActive] = useState(false);
   const [filteredUsers, setFilteredUsers] = useState([]);
-  const { setMonitoringData, setUserAttacker, setUserVictim, monitoringData, userVictim, userAttacker } =
-    useContext(GeneralContext);
+  const {
+    setMonitoringData,
+    setUserAttacker,
+    setUserVictim,
+    monitoringData,
+    userVictim,
+    userAttacker,
+  } = useContext(GeneralContext);
   // 1. Agrega un nuevo estado para almacenar el valor de búsqueda de la cédula.
   const [searchCedula, setSearchCedula] = useState("");
 
@@ -145,7 +151,6 @@ function UsersTableController() {
       setMonitoringData(monitoringModel);
       setUserAttacker(attackerModel);
       setUserVictim(victimModel);
-      
 
       // Redirige al usuario a /follow-up
       navigate("/follow-up");
@@ -156,39 +161,43 @@ function UsersTableController() {
   };
 
   const fetchUsers = async () => {
-    const response = await fetch(`${BaseURL.apiUrl}/users/getAll`);
-    const data = await response.json();
-    const roleMap = {
-      1: "Admin",
-      2: "Victima",
-      3: "Agresor",
-      // Agrega más roles aquí si es necesario
-    };
-    if (Array.isArray(data.respuesta)) {
-      const users = data.respuesta.map(
-        (user) =>
-          new UserModel(
-            user.id, // Agrega el id aquí
-            user.datosPersona.nombre,
-            user.datosPersona.seg_nombre,
-            user.datosPersona.apellido,
-            user.datosPersona.seg_apellido,
-            user.datosPersona.fch_nac,
-            user.datosPersona.cedula,
-            user.userName,
-            user.password,
-            user.email,
-            roleMap[user.userTypeDto.id],
-            user.imei,
-            user.userTypeDto.name,
-            user.datosPersona.direccion,
-            null // registrationDate no está en los datos proporcionados
-          )
-      );
-      setUsers(new UsersTableModel(users));
-    } else {
-      console.error("API response is not an array:", data);
-      setUsers(new UsersTableModel([]));
+    try {
+      const response = await fetch(`${BaseURL.apiUrl}/users/getAll`);
+      const data = await response.json();
+      const roleMap = {
+        1: "Admin",
+        2: "Victima",
+        3: "Agresor",
+        // Agrega más roles aquí si es necesario
+      };
+      if (Array.isArray(data.respuesta)) {
+        const users = data.respuesta.map(
+          (user) =>
+            new UserModel(
+              user.id, // Agrega el id aquí
+              user.datosPersona.nombre,
+              user.datosPersona.seg_nombre,
+              user.datosPersona.apellido,
+              user.datosPersona.seg_apellido,
+              user.datosPersona.fch_nac,
+              user.datosPersona.cedula,
+              user.userName,
+              user.password,
+              user.email,
+              roleMap[user.userTypeDto.id],
+              user.imei,
+              user.userTypeDto.name,
+              user.datosPersona.direccion,
+              null // registrationDate no está en los datos proporcionados
+            )
+        );
+        setUsers(new UsersTableModel(users));
+      } else {
+        console.error("API response is not an array:", data);
+        setUsers(new UsersTableModel([]));
+      }
+    } catch (error) {
+      console.error("Error fetching users:", error);
     }
   };
   /*

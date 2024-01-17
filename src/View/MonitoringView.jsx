@@ -1,6 +1,7 @@
 // MonitoringView.jsx
-import React from "react";
+import React, { useContext } from "react";
 import "../Pages/css/MonitoringView.css";
+import GeneralContext from "../GeneralContext";
 
 function MonitoringView({
   monitoring,
@@ -10,6 +11,7 @@ function MonitoringView({
   responseMessage,
   responseSuccess,
 }) {
+  const { monitoringData } = useContext(GeneralContext);
   return (
     <div>
       <form id="formId" method="POST" onSubmit={handleSubmit}>
@@ -76,9 +78,9 @@ function MonitoringView({
               backgroundColor: monitoring.frequency ? "green" : undefined,
             }}
           >
-            {monitoring.frequency ? "Actualizar ✏️" : "Enviar 📤"}
+            {monitoringData.frequency ? "Actualizar ✏️" : "Enviar 📤"}
           </button>
-          {monitoring.frequency && (
+          {monitoringData.frequency && (
             <button
               type="button"
               style={{

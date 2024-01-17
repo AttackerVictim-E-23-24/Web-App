@@ -4,11 +4,13 @@ import { BaseURL } from "./BaseURL";
 import GeneralContext from "../GeneralContext";
 import PointView from "../View/PointView"; // Importa PointView
 
-const PointController = ({ onMarkerClick }) => {
+const PointController = () => {
   const { userAttacker, userVictim } = useContext(GeneralContext);
   const [center, setCenter] = useState({ lat: -34.397, lng: 150.644 });
   const [attackerPoints, setAttackerPoints] = useState([]);
   const [victimPoints, setVictimPoints] = useState([]);
+  
+  const [infoWindow, setInfoWindow] = useState(null);
 
   useEffect(() => {
     navigator.geolocation.getCurrentPosition(
@@ -39,6 +41,7 @@ const PointController = ({ onMarkerClick }) => {
             const points = response.data.respuesta.map(location => ({
               lat: Number(location.latitud),
               lng: Number(location.longitud),
+              username: userAttacker.userName, // Agrega el nombre de usuario
             }));
             setAttackerPoints(points);
           } else {
@@ -63,6 +66,7 @@ const PointController = ({ onMarkerClick }) => {
             const points = response.data.respuesta.map(location => ({
               lat: Number(location.latitud),
               lng: Number(location.longitud),
+              username: userVictim.userName, // Agrega el nombre de usuario
             }));
             setVictimPoints(points);
           } else {
@@ -82,7 +86,17 @@ const PointController = ({ onMarkerClick }) => {
   
     return () => clearInterval(intervalId);
   }, [userAttacker, userVictim]);
-  
+
+  const onMarkerClick = (point) => {
+    const contentString = `Username: ${point.username}<br>Coordinates: ${point.lat}, ${point.lng}`;
+    setInfoWindow({ 
+      content: contentString, 
+      position: { lat: point.lat + 0.0001, lng: point.lng } // Ajusta la posición del InfoWindow
+    });
+  };
+  const handleInfoWindowClose = () => {
+    setInfoWindow(null);
+  };
 
   return (
       <div className="mapContainer">
@@ -91,6 +105,8 @@ const PointController = ({ onMarkerClick }) => {
           attackerPoints={attackerPoints}
           victimPoints={victimPoints}
           onMarkerClick={onMarkerClick}
+          handleInfoWindowClose={handleInfoWindowClose}
+          infoWindow={infoWindow}
         />
       </div>
   );

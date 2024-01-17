@@ -13,6 +13,19 @@ function UserView({
   const roleLabel = user.role === "victima" ? "de la víctima" : "del agresor";
   const { userVictim, userAttacker } = useContext(GeneralContext);
   const roleData = user.role === "victima" ? userVictim : userAttacker;
+  const formatDate = (date) => {
+    const d = new Date(date);
+    let month = '' + (d.getMonth() + 1);
+    let day = '' + d.getDate();
+    const year = d.getFullYear();
+  
+    if (month.length < 2) 
+      month = '0' + month;
+    if (day.length < 2) 
+      day = '0' + day;
+  
+    return [year, month, day].join('-');
+  }
 
   return (
     <div>
@@ -129,7 +142,7 @@ function UserView({
                 id="birthDate"
                 name="birthDate"
                 type="date"
-                value={user.birthDate || ""}
+                value={formatDate(user.birthDate) || ""}
                 onChange={handleInputChange}
                 required
               />
