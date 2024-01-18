@@ -1,17 +1,9 @@
-// login.js
-import { useState } from 'react';
+class LoginModel {
+  constructor() {
+    this.username = '';
+    this.password = '';
+    this.message = '';
+  }
+}
 
-const useLoginModel = () => {
-  const [loginData, setLoginData] = useState({
-    username: '',
-    password: '',
-    message: '',
-  });
-
-  return {
-    loginData,
-    setLoginData,
-  };
-};
-
-export default useLoginModel;
+export default LoginModel;

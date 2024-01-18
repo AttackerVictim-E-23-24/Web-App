@@ -1,12 +1,16 @@
-import React from "react";
+// LoginController.jsx
+import React, { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import useLoginModel from "../Model/LoginModel";
+import LoginModel from "../Model/LoginModel";
 import LoginView from "../View/LoginView";
 import { BaseURL } from "./BaseURL"; // Asegúrate de que la ruta sea correcta
+import GeneralContext from "../GeneralContext";
 
 const LoginController = () => {
-  const { loginData, setLoginData } = useLoginModel();
+  const [loginData, setLoginData] = useState(new LoginModel());
   const navigate = useNavigate();
+  const { setUserVictim, setUserAttacker, setMonitoringData, setLoginData: setContextLoginData } =
+  useContext(GeneralContext);
 
   const handleInputChange = (field, value) => {
     setLoginData((prevData) => ({ ...prevData, [field]: value }));
@@ -18,7 +22,7 @@ const LoginController = () => {
 
     try {
       const response = await fetch(
-        `${BaseURL.apiUrl}/users/authUser/${loginData.username}/${loginData.password}/1`,
+        `${BaseURL.apiUrl}/users/authUser/${loginData.username}/${loginData.password}`,
         {
           method: "GET",
         }
@@ -32,8 +36,14 @@ const LoginController = () => {
         throw new Error(
           `HTTP error! status: ${response.status}. Message: ${data.mensaje}`
         );
-      }else
+      } else {
+        // Establecer los datos del contexto en null antes de navegar a la página de inicio
+        setUserVictim(null);
+        setUserAttacker(null);
+        setMonitoringData(null);
+        setContextLoginData(loginData); // Guarda loginData en el contexto
         navigate("/home");
+      }
       console.log(data);
     } catch (error) {
       console.error(error);

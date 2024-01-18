@@ -1,31 +1,57 @@
 // UserView.jsx
-import React from "react";
-import "../Pages/css/userView.css";
+import React, { useContext } from "react";
+import "../Pages/css/UserView.css";
+import GeneralContext from "../GeneralContext";
 
-function UserView({ user, handleInputChange, handleSubmit }) {
+function UserView({
+  user,
+  handleInputChange,
+  handleSubmit,
+  responseMessage,
+  responseSuccess,
+}) {
+  const roleLabel = user.role === "victima" ? "de la víctima" : "del agresor";
+  const { userVictim, userAttacker } = useContext(GeneralContext);
+  const roleData = user.role === "victima" ? userVictim : userAttacker;
+  const formatDate = (date) => {
+    const d = new Date(date);
+    let month = '' + (d.getMonth() + 1);
+    let day = '' + d.getDate();
+    const year = d.getFullYear();
+  
+    if (month.length < 2) 
+      month = '0' + month;
+    if (day.length < 2) 
+      day = '0' + day;
+  
+    return [year, month, day].join('-');
+  }
+
   return (
     <div>
-      <form method="POST" onSubmit={(event) => handleSubmit(event)}>
+      <form id="userForm" method="POST" onSubmit={handleSubmit}>
         <br />
         <br />
 
         <div>
           <div className="row">
             <div className={`field field-${user.role}`}>
-              <label htmlFor="firstName">Primer nombre del {user.role}</label>
+              <label htmlFor="firstName">Primer nombre {roleLabel}</label>
               <input
                 id="firstName"
                 name="firstName"
+                value={user.firstName || ""}
                 onChange={handleInputChange}
                 placeholder="Juan"
                 required
               />
             </div>
             <div className={`field field-${user.role}`}>
-              <label htmlFor="secondName">Segundo nombre del {user.role}</label>
+              <label htmlFor="secondName">Segundo nombre {roleLabel}</label>
               <input
                 id="secondName"
                 name="secondName"
+                value={user.secondName || ""}
                 onChange={handleInputChange}
                 placeholder="Pérez"
               />
@@ -33,10 +59,11 @@ function UserView({ user, handleInputChange, handleSubmit }) {
           </div>
           <div className="row">
             <div className={`field field-${user.role}`}>
-              <label htmlFor="lastName">Primer apellido del {user.role}</label>
+              <label htmlFor="lastName">Primer apellido {roleLabel}</label>
               <input
                 id="lastName"
                 name="lastName"
+                value={user.lastName || ""}
                 onChange={handleInputChange}
                 placeholder="Gómez"
                 required
@@ -44,11 +71,12 @@ function UserView({ user, handleInputChange, handleSubmit }) {
             </div>
             <div className={`field field-${user.role}`}>
               <label htmlFor="secondLastName">
-                Segundo apellido del {user.role}
+                Segundo apellido {roleLabel}
               </label>
               <input
                 id="secondLastName"
                 name="secondLastName"
+                value={user.secondLastName || ""}
                 onChange={handleInputChange}
                 placeholder="Rodríguez"
               />
@@ -56,69 +84,102 @@ function UserView({ user, handleInputChange, handleSubmit }) {
           </div>
           <div className="row">
             <div className={`field field-${user.role}`}>
-              <label htmlFor="birthDate">
-                Fecha de nacimiento del {user.role}
-              </label>
-              <input
-                id="birthDate"
-                name="birthDate"
-                type="date"
-                onChange={handleInputChange}
-                required
-              />
-            </div>
-            <div className={`field field-${user.role}`}>
-              <label htmlFor="cedula">Cédula del {user.role}</label>
+              <label htmlFor="cedula">Cédula {roleLabel}</label>
               <input
                 id="cedula"
                 name="cedula"
+                value={user.cedula || ""}
                 onChange={handleInputChange}
                 placeholder="12345678"
                 required
               />
             </div>
+            {roleData.firstName ? null : (
+              <div className={`field field-${user.role}`}>
+                <label htmlFor="email">Correo electrónico {roleLabel}</label>
+                <input
+                  id="email"
+                  name="email"
+                  type="email"
+                  value={user.email || ""}
+                  onChange={handleInputChange}
+                  placeholder="juangomez@example.com"
+                  required
+                />
+              </div>
+            )}
           </div>
+          {roleData.firstName ? null : (
+            <div className="row">
+              <div className={`field field-${user.role}`}>
+                <label htmlFor="userName">Nombre de usuario {roleLabel}</label>
+                <input
+                  id="userName"
+                  name="userName"
+                  value={user.userName || ""}
+                  onChange={handleInputChange}
+                  placeholder="juangomezca"
+                  required
+                />
+              </div>
+              <div className={`field field-${user.role}`}>
+                <label htmlFor="password">Clave {roleLabel}</label>
+                <input
+                  id="password"
+                  name="password"
+                  type="password"
+                  onChange={handleInputChange}
+                  required
+                  autoComplete="a"
+                />
+              </div>
+            </div>
+          )}
           <div className="row">
             <div className={`field field-${user.role}`}>
-              <label htmlFor="username">
-                Nombre de usuario del {user.role}
+              <label htmlFor="birthDate">Fecha de nacimiento {roleLabel}</label>
+              <input
+                id="birthDate"
+                name="birthDate"
+                type="date"
+                value={formatDate(user.birthDate) || ""}
+                onChange={handleInputChange}
+                required
+              />
+            </div>
+            <div className={`field field-${user.role}`}>
+              <label htmlFor="direccion">
+                Direccion de domicilio {roleLabel}
               </label>
               <input
-                id="username"
-                name="username"
+                id="direccion"
+                name="direccion"
                 onChange={handleInputChange}
-                placeholder="juangomez"
-                required
-              />
-            </div>
-            <div className={`field field-${user.role}`}>
-              <label htmlFor="password">Contraseña del {user.role}</label>
-              <input
-                id="password"
-                name="password"
-                type="password"
-                onChange={handleInputChange}
-                placeholder="contraseña"
-                required
-              />
-            </div>
-          </div>
-          <div className="row">
-            <div className={`field field-${user.role}`}>
-              <label htmlFor="email">Correo electrónico del {user.role}</label>
-              <input
-                id="email"
-                name="email"
-                type="email"
-                onChange={handleInputChange}
-                placeholder="juangomez@example.com"
+                value={user.direccion || ""}
+                placeholder="Av/calle/casa abcd 1234"
                 required
               />
             </div>
           </div>
         </div>
-
-        <button type="submit">Enviar</button>
+        <div style={{ display: "flex", justifyContent: "space-between" }}>
+          <button
+            type="submit"
+            style={{
+              backgroundColor: roleData.firstName ? "green" : undefined,
+            }}
+          >
+            {roleData.firstName ? "Actualizar ✏️" : "Enviar 📤"}
+          </button>
+        </div>
+        <div
+          style={{
+            borderRadius: "10px",
+            backgroundColor: responseSuccess ? "#6dd772" : "#ff5c4b",
+          }}
+        >
+          {responseMessage}{" "}
+        </div>
       </form>
     </div>
   );

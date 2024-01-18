@@ -1,22 +1,25 @@
 // User.js
-class UserModel {
-    constructor(id, firstName, secondName, lastName, secondLastName, birthDate, cedula, userName, password, email, role, imei,userTypeDto,direccion, registrationDate) {
+class NewUserModel {
+    constructor(firstName, secondName, lastName, secondLastName, cedula, userName, email, role, imei,userTypeDto,direccion, startBirthDate, endBirthDate, startRegistrationDate, BirthDate, RegistrationDate, endRegistrationDate) {
       this.firstName = firstName;
       this.secondName = secondName;
       this.lastName = lastName;
       this.secondLastName = secondLastName;
-      this.birthDate = birthDate;
       this.cedula = cedula;
       this.userName = userName;
-      this.password = password;
       this.email = email;
       this.role = role;
       this.imei = imei;
+      this.BirthDate = BirthDate; 
+      this.RegistrationDate = RegistrationDate; 
       this.userTypeDto = userTypeDto;
       this.direccion = direccion;
-      this.registrationDate = registrationDate;
-      this.id = id;
+      this.startBirthDate = startBirthDate; // nueva propiedad
+      this.endBirthDate = endBirthDate; // nueva propiedad
+      this.startRegistrationDate = startRegistrationDate; // nueva propiedad
+      this.endRegistrationDate = endRegistrationDate; // nueva propiedad
     }
+  
     
     getFullName() {
       return `${this.firstName} ${this.secondName} ${this.lastName} ${this.secondLastName}`;
@@ -41,63 +44,6 @@ class UserModel {
     changePassword(newPassword) {
       this.password = newPassword;
     }
-
-    getId() {
-      return this.id;
-    }
-
-    getUserName() {
-      return this.userName;
-    }
-
-    getImei() {
-      return this.imei;
-    }
-
-    getEmail() {
-      return this.email;
-    }
-
-    getRole() {
-      return this.role;
-    }
-
-    getDireccion() {
-      return this.direccion;
-    }
-
-    getRegistrationDate() {
-      return this.registrationDate;
-    }
-
-    getCedula() {
-      return this.cedula;
-    }
-
-    getBirthDate() {
-      return this.birthDate;
-    }
-
-    getFirstName() {
-      return this.firstName;
-    }
-
-    getSecondName() {
-      return this.secondName;
-    }
-
-    getLastName() {
-      return this.lastName;
-    }
-
-    getSecondLastName() {
-      return this.secondLastName;
-    }
-
-    getUserTypeDto() {
-      return this.userTypeDto;
-    }
-
 }
 
-export default UserModel;
+export default NewUserModel;
