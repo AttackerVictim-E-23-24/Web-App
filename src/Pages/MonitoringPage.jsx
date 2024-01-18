@@ -9,12 +9,6 @@ import GeneralContext from "../GeneralContext";
 
 const MonitoringPage = () => {
   const views = ["victim", "attacker", "monitoring"];
-  const [victimPrintable, setVictimPrintable] = useState(
-    localStorage.getItem("victimDataSent") !== "true"
-  );
-  const [attackerPrintable, setAttackerPrintable] = useState(
-    localStorage.getItem("attackerDataSent") !== "true"
-  );
   const [currentView, setCurrentView] = useState("victim");
   const { userVictim, userAttacker, monitoringData, setUserVictim, setUserAttacker, setMonitoringData } =
     useContext(GeneralContext);
@@ -22,23 +16,20 @@ const MonitoringPage = () => {
   const resetData = () => {
     localStorage.removeItem("attackerDataSent");
     localStorage.removeItem("victimDataSent");
-    setAttackerPrintable(true);
-    setVictimPrintable(true);
     setCurrentView("victim");
     setUserVictim(new UserModel());
     setUserAttacker(new UserModel());
     setMonitoringData(new MonitoringModel());
   };
-
   useEffect(() => {
-    if (victimPrintable) {
+    if (!userVictim.userName) {
       setCurrentView("victim");
-    } else if (attackerPrintable) {
+    } else if (!userAttacker.userName) {
       setCurrentView("attacker");
     } else {
       setCurrentView("monitoring");
     }
-  }, [victimPrintable, attackerPrintable]);
+  }, [userVictim, userAttacker]);
 
   return (
     <div className="main-container">
@@ -74,7 +65,7 @@ const MonitoringPage = () => {
               <button
                 className={`myButton ${
                   currentView === "victim" ? "selected" : ""
-                } ${userVictim?.userName ? "filled" : ""}`}
+                } ${userVictim?.userName && userAttacker?.userName ? "filled" : ""}`}
                 onClick={() => setCurrentView("victim")}
               >
                 Registrar Victima
@@ -82,7 +73,7 @@ const MonitoringPage = () => {
               <button
                 className={`myButton ${
                   currentView === "attacker" ? "selected" : ""
-                } ${userAttacker?.userName ? "filled" : ""}`}
+                } ${userVictim?.userName && userAttacker?.userName ? "filled" : ""}`}
                 onClick={() => setCurrentView("attacker")}
               >
                 Registrar Agresor
@@ -110,8 +101,8 @@ const MonitoringPage = () => {
           </div>
 
           <div className={`fade ${currentView}`}>
-            {currentView === "victim" && <UserController role="victima" setVictimPrintable={setVictimPrintable} />}
-            {currentView === "attacker" && <UserController role="agresor" setAttackerPrintable={setAttackerPrintable} />}
+            {currentView === "victim" && <UserController role="victima"  />}
+            {currentView === "attacker" && <UserController role="agresor" />}
             {currentView === "monitoring" && <MonitoringController />}
           </div>
         </div>

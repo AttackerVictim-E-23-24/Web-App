@@ -75,7 +75,7 @@ function MonitoringView({
           <button
             type="submit"
             style={{
-              backgroundColor: monitoring.frequency ? "green" : undefined,
+              backgroundColor: monitoringData.frequency ? "green" : undefined,
             }}
           >
             {monitoringData.frequency ? "Actualizar ✏️" : "Enviar 📤"}

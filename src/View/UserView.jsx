@@ -148,13 +148,14 @@ function UserView({
               />
             </div>
             <div className={`field field-${user.role}`}>
-              <label htmlFor="address">
+              <label htmlFor="direccion">
                 Direccion de domicilio {roleLabel}
               </label>
               <input
-                id="address"
-                name="address"
+                id="direccion"
+                name="direccion"
                 onChange={handleInputChange}
+                value={user.direccion || ""}
                 placeholder="Av/calle/casa abcd 1234"
                 required
               />
