@@ -18,6 +18,7 @@ import FollowUpPage from "./Pages/FollowUpPage";
 import UserModel from "./Model/UserModel";
 import MonitoringModel from "./Model/MonitoringModel";
 import LoginModel from "./Model/LoginModel";
+import AlertsPage from "./Pages/AlertsPage";
 
 const App = () => {
   const [loginData, setLoginData] = useState(() => {
@@ -171,6 +172,15 @@ const App = () => {
                 <div>
                   <Sidebar />
                   <FollowUpPage />
+                </div>
+              }
+            />
+            <Route
+              path="/alerts"
+              element={
+                <div>
+                  <Sidebar />
+                  <AlertsPage />
                 </div>
               }
             />
