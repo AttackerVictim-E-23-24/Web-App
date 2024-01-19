@@ -34,3 +34,22 @@ messaging.onBackgroundMessage((payload) => {
 
   self.registration.showNotification(notificationTitle, notificationOptions);
 });
+
+// Handle background messages
+messaging.onBackgroundMessage((payload) => {
+  console.log("Received background message ", payload);
+
+  // Create a new BroadcastChannel
+  const channel = new BroadcastChannel('sw-messages');
+  // Send the payload to the channel
+  channel.postMessage(payload);
+
+  // Customize notification here
+  const notificationTitle = payload.notification.title;
+  const notificationOptions = {
+    body: payload.notification.body,
+    icon: "/logo192.png",
+  };
+
+  self.registration.showNotification(notificationTitle, notificationOptions);
+});

@@ -1,23 +1,29 @@
 import React, { useEffect } from "react";
 import "../Model/FirebaseConfig";
-import { ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import { requestPermission } from '../Controller/AlertsController'; // Import the requestPermission function
+import useAlertsController from "../Controller/AlertsController"; // Import the useAlertsController hook
+import "../Pages/css/AlertsPage.css";
 
 const AlertsPage = () => {
+  const { messages, requestPermission } = useAlertsController(); // Use the useAlertsController hook
+
   useEffect(() => {
     requestPermission(); // Call the requestPermission function when the component is mounted
   }, []); // The empty array means this effect runs once on mount and not on updates
 
   return (
     <>
-      <ToastContainer />
       <div className="main-container">
         <div className="content">
-          <div className="controller-container">
+          <div className="">
             <br />
             <h1>Alertas</h1>
             <br />
+            {messages &&
+              messages.map((message, index) => (
+                <div key={index} className="card">
+                  {message}
+                </div>
+              ))}
           </div>
         </div>
         <br />
