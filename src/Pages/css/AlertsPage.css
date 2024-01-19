@@ -1,0 +1,9 @@
+.card {
+  width: 80%;
+  background-color: #f2f2f2; /* Un color de fondo suave */
+  border-radius: 15px; /* Bordes redondeados */
+  padding: 20px; /* Espacio interior alrededor del contenido */
+  margin: 10px auto; /* Margen superior e inferior de 10px y margen izquierdo y derecho automático para centrar la tarjeta */
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2); /* Sombra suave alrededor de la tarjeta */
+  word-wrap: break-word; /* Asegura que el texto se ajuste al tamaño de la tarjeta */
+}
